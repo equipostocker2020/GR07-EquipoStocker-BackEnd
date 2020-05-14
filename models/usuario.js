@@ -16,7 +16,7 @@ var rolesValidos = {
 var usuarioSchema = new Schema({
     nombre: { type: String, required: [true, 'El nombre es necesario'] },
     apellido: { type: String, required: [true, 'El apellido es necesario'] },
-    empresa: { type: String, unique: true, required: [true, 'El nombre de la empresa es necesario'] },
+    empresa: { type: String, required: [true, 'El nombre de la empresa es necesario'] },
     email: { type: String, unique: true, required: [true, 'El correo es necesario'] },
     password: { type: String, required: [true, ' La contraseña es necesaria'] },
     direccion: { type: String, required: false },
@@ -29,7 +29,7 @@ var usuarioSchema = new Schema({
 });
 
 // validando path
-usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe ser unico' });
+usuarioSchema.plugin(uniqueValidator, { message: 'debe ser único' });
 
 
 // exportando el modulo para utilizarlo
