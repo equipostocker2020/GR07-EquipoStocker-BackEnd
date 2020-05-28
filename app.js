@@ -8,6 +8,7 @@ const router = require('express').Router();
 
 //importar rutas
 var usuarioRoutes = require('./routes/usuario');
+var loginRoutes = require('./routes/login');
 
 //inicializando
 var app = express();
@@ -15,7 +16,7 @@ var app = express();
 // enconding, verbos y metodos soportados..
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request, Method");
+    res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin,X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request, Method");
     res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
     res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
     next();
@@ -36,6 +37,7 @@ mongoose.connection.openUri('mongodb://localhost:27017/stocker', (err, res) => {
 
 //rutas
 app.use('/usuario', usuarioRoutes);
+app.use('/login', loginRoutes);
 
 
 // escuchando peticiones

@@ -1,13 +1,11 @@
-// requires
 var jwt = require('jsonwebtoken');
-
-// constante
 var SEED = require('../config/config').SEED;
 
-
-// verifica token lo usamos como middleware
-
-
+/** 
+ * Funcion verifica token a traves de JWT
+ * lo usamos como middleware de la aplicación
+ * @author Stocker
+ * */
 exports.verificaToken = function(req, res, next) {
     var token = req.query.token;
     jwt.verify(token, SEED, (err, decoded) => {
