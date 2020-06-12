@@ -1,6 +1,5 @@
 var jwt = require('jsonwebtoken');
 var SEED = require('../config/config').SEED;
-
 /** 
  * Funcion verifica token a traves de JWT
  * lo usamos como middleware de la aplicación
@@ -17,7 +16,6 @@ exports.verificaToken = function(req, res, next) {
             });
         }
         req.usuario = decoded.usuario;
-
         next();
     });
 }

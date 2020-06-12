@@ -2,13 +2,14 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var fileUpload = require('express-fileupload');
 
 const router = require('express').Router();
+
 
 //importar rutas
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
+var proveedoresRoutes = require('./routes/proveedor');
 
 //inicializando
 var app = express();
@@ -21,23 +22,21 @@ app.use((req, res, next) => {
     res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
     next();
 });
-
 //Body Parser
 //parse application 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
-app.use(fileUpload());
 
 // conexion a la BD.
 mongoose.connection.openUri('mongodb://localhost:27017/stocker', (err, res) => {
-
     if (err) throw err;
     console.log('Base de datos\x1b[32m%s\x1b[0m ', ' Stocker online');
 });
 
 //rutas
-app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
+app.use('/usuario', usuarioRoutes);
+app.use('/proveedor', proveedoresRoutes);
 
 
 // escuchando peticiones
