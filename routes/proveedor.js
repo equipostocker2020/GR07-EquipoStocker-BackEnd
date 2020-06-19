@@ -72,4 +72,82 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
     });
 
 });
+
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Proveedor.findById(id, (err, proveedor) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar proveedor',
+                errors: err
+            });
+        }
+
+        if (!proveedor) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El proveedor con el ID' + id + ' no existe',
+                errors: { message: ' No existe un proveedor con ese ID' }
+            });
+        }
+
+        proveedor.nombre = body.nombre;
+        proveedor.direccion = body.direccion;
+        proveedor.cuit = body.cuit;
+        proveedor.email = body.email;
+        proveedor.telefono = body.telefono;
+        proveedor.situacion_afip = body.situacion_afip;
+        proveedor.logo = body.img;
+
+        proveedor.save((err, proveedorGuardado) => {
+
+
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar proveedor',
+                    errors: err,
+                });
+            }
+            proveedorGuardado.password = '=)';
+            res.status(200).json({
+                ok: true,
+                proveedor: proveedorGuardado
+            });
+        });
+    });
+});
+
+
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    Proveedor.findByIdAndRemove(id, (err, proveedorBorrado) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al borrar proveedor',
+                errors: err
+            });
+        }
+
+        if (!proveedorBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un proveedor con este ID',
+                errors: { message: 'No existe un proveedor con este ID' }
+            });
+        }
+        
+        res.status(200).json({
+            ok: true,
+            proveedor: proveedorBorrado
+        });
+    });
+});
+
 module.exports = app;
