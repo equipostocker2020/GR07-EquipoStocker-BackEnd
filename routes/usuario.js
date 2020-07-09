@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     // enumerando 
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
-    Usuario.find({}, 'nombre apellido empresa email img role password cuit dni')
+    Usuario.find({}, 'nombre apellido empresa email img role password cuit dni direccion')
         .skip(desde)
         .limit(15)
 
@@ -126,7 +126,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
                     errors: err,
                 });
             }
-            usuarioGuardado.password = '=)';
+            usuarioGuardado.password = bcrypt.hashSync(body.password, 10);
             res.status(200).json({
                 ok: true,
                 usuario: usuarioGuardado
@@ -134,6 +134,37 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         });
     });
 });
+
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al borrar usuario',
+                errors: err
+            });
+        }
+
+        if (!usuarioBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un usuario con este ID',
+                errors: { message: 'No existe un usuario con este ID' }
+            });
+
+        }
+
+        res.status(200).json({
+            ok: true,
+            usuario: usuarioBorrado
+        });
+
+    });
+
+});
+
 
 //exportando modulo
 module.exports = app;

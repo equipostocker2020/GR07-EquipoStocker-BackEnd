@@ -10,6 +10,7 @@ const router = require('express').Router();
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
 var proveedoresRoutes = require('./routes/proveedor');
+var productosRoutes = require('./routes/producto');
 
 //inicializando
 var app = express();
@@ -37,6 +38,8 @@ mongoose.connection.openUri('mongodb://localhost:27017/stocker', (err, res) => {
 app.use('/login', loginRoutes);
 app.use('/usuario', usuarioRoutes);
 app.use('/proveedor', proveedoresRoutes);
+app.use('/producto', productosRoutes);
+
 
 
 // escuchando peticiones

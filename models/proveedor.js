@@ -15,5 +15,8 @@ var proveedorSchema = new Schema({
     situacion_afip: { type: String, unique: true, required: [true, 'La situacion de AFIP es obligatoria'] },
     img: { type: String, required: false },
 });
+
+proveedorSchema.plugin(uniqueValidator, { message: 'debe ser único' });
+
 // exportando el modulo para utilizarlo
 module.exports = mongoose.model('Proveedor', proveedorSchema);
