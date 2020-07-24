@@ -3,10 +3,7 @@ var app = express();
 
 var Producto = require('../models/producto');
 
-
 var mdAutenticacion = require('../middlewares/autenticacion');
-
-
 
 // obtiene todos los productos, preparada para paginar.
 app.get('/', (req, res) => {
@@ -72,5 +69,79 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
+// actualiza un producto
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    var body = req.body;
+
+    Producto.findById(id, (err, producto) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al buscar producto',
+                errors: err
+            });
+        }
+
+        if (!producto) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El producto con el ID' + id + ' no existe',
+                errors: { message: 'No existe un producto con este ID' }
+            });
+        }
+        producto.nombre = body.nombre;
+        producto.stock = body.stock;
+        producto.precio = body.precio;
+
+        producto.save((err, productoGuardado) => {
+
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar producto',
+                    errors: err
+                });
+            }
+
+
+            res.status(200).json({
+                ok: true,
+                producto: productoGuardado
+            });
+        });
+    });
+});
+
+//elimina un producto especifico.
+
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+
+    var id = req.params.id;
+    Producto.findByIdAndRemove(id, (err, productoBorrado) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al borrar producto',
+                errors: err
+            });
+        }
+
+        if (!productoBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un producto con este ID',
+                errors: { message: 'No existe un producto con este ID' }
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            producto: productoBorrado
+        });
+    });
+})
 
 module.exports = app;
