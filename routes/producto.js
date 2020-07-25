@@ -71,11 +71,10 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
 // actualiza un producto
 app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+
     var id = req.params.id;
     var body = req.body;
-
     Producto.findById(id, (err, producto) => {
-
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -83,7 +82,6 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
                 errors: err
             });
         }
-
         if (!producto) {
             return res.status(400).json({
                 ok: false,
@@ -94,9 +92,10 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         producto.nombre = body.nombre;
         producto.stock = body.stock;
         producto.precio = body.precio;
+        producto.proveedor = body.proveedor;
+        const productoGuardado = Producto.findByIdAndUpdate(id, req.body, { new: true });
 
         producto.save((err, productoGuardado) => {
-
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -104,11 +103,9 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
                     errors: err
                 });
             }
-
-
             res.status(200).json({
                 ok: true,
-                producto: productoGuardado
+                producto: productoGuardado,
             });
         });
     });

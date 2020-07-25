@@ -15,7 +15,7 @@ var productoSchema = new Schema({
     proveedor: {
         type: Schema.Types.ObjectId,
         ref: 'Proveedor',
-        required: [true, "el id del proveedor es requerido"],
+        // required: [true, "el id del proveedor es requerido"],
         //required: [true, "el nombre del proveedor es requerido"]
     }
 
