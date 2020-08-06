@@ -5,12 +5,12 @@ var bodyParser = require('body-parser');
 
 const router = require('express').Router();
 
-
 //importar rutas
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
 var proveedoresRoutes = require('./routes/proveedor');
 var productosRoutes = require('./routes/producto');
+var clienteRoutes = require('./routes/cliente');
 
 //inicializando
 var app = express();
@@ -39,8 +39,7 @@ app.use('/login', loginRoutes);
 app.use('/usuario', usuarioRoutes);
 app.use('/proveedor', proveedoresRoutes);
 app.use('/producto', productosRoutes);
-
-
+app.use('/cliente', clienteRoutes);
 
 // escuchando peticiones
 app.listen(3000, () => {
