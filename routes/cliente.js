@@ -87,6 +87,92 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
 });
 
+//actualizar cliente
+
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Cliente.findById(id, (err, cliente) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar cliente',
+                errors: err
+            });
+        }
+
+        if (!cliente) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El cliente con el ID' + id + ' no existe',
+                errors: { message: ' No existe un cliente con ese ID' }
+            });
+        }
+
+        cliente.nombre = body.nombre;
+        cliente.apellido = body.apellido;
+        cliente.email = body.email;
+        cliente.direccion = body.direccion;
+        cliente.cuit = body.cuit;
+        cliente.telefono = body.telefono;
+        cliente.dni = body.dni;
+
+        cliente.save((err, clienteGuardado) => {
+
+
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar cliente',
+                    errors: err,
+                });
+            }
+            clienteGuardado.password = '=)';
+
+            res.status(200).json({
+                ok: true,
+                usuario: clienteGuardado
+            });
+        });
+    });
+});
+
+// eliminar cliente
+
+app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    Cliente.findByIdAndRemove(id, (err, clienteBorrado) => {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al borrar cliente',
+                errors: err
+            });
+        }
+
+        if (!clienteBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un cliente con este ID',
+                errors: { message: 'No existe un cliente con este ID' }
+            });
+
+        }
+
+        res.status(200).json({
+            ok: true,
+            cliente: clienteBorrado
+        });
+
+    });
+
+})
+
+
 //exportando modulo
 
 module.exports = app;
