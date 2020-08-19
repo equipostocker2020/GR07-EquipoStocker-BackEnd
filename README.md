@@ -83,8 +83,6 @@ Usamos [Github](http://github.com) para el versionado. Para todas las versiones 
 
 ## Autores ✒️
 
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
-
 * **Gonzalo Figueras** - *Documentacion - Desarrollo* - [gonzaloFigueras](https://github.com/gonzaloFigueras)
 * **Marcelo Gutierrez** - *Documentacion - Desarrollo* - [marcelofabiangutierrez88](https://github.com/marcelofabiangutierrez88)
 * **Agustin Galarza** - *Documentacion - Desarrollo* - [AgustinArielGalarza](https://github.com/AgustinArielGalarza)
