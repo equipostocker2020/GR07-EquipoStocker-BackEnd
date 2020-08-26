@@ -75,7 +75,7 @@ _**nodemon** mantiene se mantiene a la escucha de cambios que se vayan generando
 
 ## Wiki 📖
 
-Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
+Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/equipostocker2020/GR07-EquipoStocker-BackEnd/wiki)
 
 ## Versionado 📌
 
