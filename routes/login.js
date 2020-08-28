@@ -3,16 +3,13 @@ var express = require('express');
 var app = express();
 //Módulo para encriptar contraseña
 var bcrypt = require('bcryptjs');
+//jwt
 var jwt = require('jsonwebtoken');
 var Usuario = require('../models/usuario');
-
 // constantes
 var SEED = require('../config/config').SEED;
 
-/**
- * Metodo Post para registrarte
- * @author Stocker
- */
+//metodo para logearse donde valida mail (user) y pass. trae token cada vez que se envia.
 app.post('/', (req, res) => {
     var body = req.body;
 

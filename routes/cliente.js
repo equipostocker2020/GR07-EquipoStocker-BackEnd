@@ -1,58 +1,50 @@
 //requires
-var express = require('express');
+var express = require("express");
 var app = express();
 
 // //json web token
-var jwt = require('jsonwebtoken');
-
+var jwt = require("jsonwebtoken");
 
 //requiere modelo
-var Cliente = require('../models/cliente');
+var Cliente = require("../models/cliente");
 
 //middleware
-var mdAutenticacion = require('../middlewares/autenticacion');
+var mdAutenticacion = require("../middlewares/autenticacion");
 
 // obtener clientes...
-
-app.get('/', (req, res) => {
-    // enumerando 
+app.get("/", (req, res) => {
+    // enumerando
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
-    Cliente.find({}, 'nombre apellido email direccion cuit telefono dni')
+    Cliente.find({}, "nombre apellido email direccion cuit telefono dni img")
         .skip(desde)
         .limit(15)
-
-    // ejecuta, puede tener un error manejado.
-    .exec((err, clientes) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error cargando clientes',
-                errors: err
+        // ejecuta, puede tener un error manejado.
+        .exec((err, clientes) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: "Error cargando clientes",
+                    errors: err,
+                });
+            }
+            // metodo count donde va contando clientes simplemente muestra un int que se incrementa con cada nuevo registro
+            Cliente.count({}, (err, conteo) => {
+                res.status(200).json({
+                    ok: true,
+                    clientes: clientes,
+                    total: conteo,
+                });
             });
-        }
-        // metodo count donde va contando clientes simplemente muestra un int que se incrementa con cada nuevo registro
-
-        Cliente.count({}, (err, conteo) => {
-
-            res.status(200).json({
-                ok: true,
-                clientes: clientes,
-                total: conteo
-            });
-        })
-    })
+        });
 });
 
 // crear cliente
-
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
-
+app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postan. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
 
     var body = req.body;
-
 
     var cliente = new Cliente({
         nombre: body.nombre,
@@ -63,35 +55,29 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
         telefono: body.telefono,
         dni: body.dni,
         img: body.img,
-
     });
 
     // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
-
     cliente.save((err, clienteGuardado) => {
         // si hay un error....
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear usuario',
-                errors: err
+                mensaje: "Error al crear usuario",
+                errors: err,
             });
         }
         // si pasa ok ...
         res.status(201).json({
             ok: true,
             cliente: clienteGuardado,
-            clienteToken: req.cliente
+            clienteToken: req.cliente,
         });
     });
-
 });
 
 //actualizar cliente
-
-app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
-
-
+app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
@@ -99,16 +85,16 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar cliente',
-                errors: err
+                mensaje: "Error al buscar cliente",
+                errors: err,
             });
         }
 
         if (!cliente) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El cliente con el ID' + id + ' no existe',
-                errors: { message: ' No existe un cliente con ese ID' }
+                mensaje: "El cliente con el ID" + id + " no existe",
+                errors: { message: " No existe un cliente con ese ID" },
             });
         }
 
@@ -121,58 +107,49 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         cliente.dni = body.dni;
 
         cliente.save((err, clienteGuardado) => {
-
-
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar cliente',
+                    mensaje: "Error al actualizar cliente",
                     errors: err,
                 });
             }
-            clienteGuardado.password = '=)';
+            clienteGuardado.password = "=)";
 
             res.status(200).json({
                 ok: true,
-                usuario: clienteGuardado
+                usuario: clienteGuardado,
             });
         });
     });
 });
 
 // eliminar cliente
-
-app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Cliente.findByIdAndRemove(id, (err, clienteBorrado) => {
-
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar cliente',
-                errors: err
+                mensaje: "Error al borrar cliente",
+                errors: err,
             });
         }
 
         if (!clienteBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe un cliente con este ID',
-                errors: { message: 'No existe un cliente con este ID' }
+                mensaje: "No existe un cliente con este ID",
+                errors: { message: "No existe un cliente con este ID" },
             });
-
         }
 
         res.status(200).json({
             ok: true,
-            cliente: clienteBorrado
+            cliente: clienteBorrado,
         });
-
     });
-
-})
-
+});
 
 //exportando modulo
-
 module.exports = app;

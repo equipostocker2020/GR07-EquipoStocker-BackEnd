@@ -1,21 +1,21 @@
 //requires
-var express = require('express');
+var express = require("express");
 var app = express();
 // //json web token
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 //requiere modelo
-var Proveedor = require('../models/proveedor');
+var Proveedor = require("../models/proveedor");
 //middleware
-var mdAutenticacion = require('../middlewares/autenticacion');
+var mdAutenticacion = require("../middlewares/autenticacion");
 // falta encriptar contraseña.
-var bcrypt = require('bcryptjs');
+var bcrypt = require("bcryptjs");
 
 // obtener proveedor...
-app.get('/', (req, res) => {
-    // enumerando 
+app.get("/", (req, res) => {
+    // enumerando
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
-    Proveedor.find({}, 'nombre direccion cuit email telefono situacion_afip img ')
+    Proveedor.find({}, "nombre direccion cuit email telefono situacion_afip img ")
         .skip(desde)
         .limit(15)
         // ejecuta, puede tener un error manejado.
@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
-                    mensaje: 'Error cargando proveedor',
-                    errors: err
+                    mensaje: "Error cargando proveedor",
+                    errors: err,
                 });
             }
             // metodo count donde va contando proveedor simplemente muestra un int que se incrementa con cada nuevo registro
@@ -32,13 +32,13 @@ app.get('/', (req, res) => {
                 res.status(200).json({
                     ok: true,
                     proveedor: proveedor,
-                    total: conteo
+                    total: conteo,
                 });
-            })
-        })
+            });
+        });
 });
 // crear proveedor
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postam. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
     var body = req.body;
@@ -59,22 +59,21 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear proveedor',
-                errors: err
+                mensaje: "Error al crear proveedor",
+                errors: err,
             });
         }
         // si pasa ok ...
         res.status(201).json({
             ok: true,
             proveedor: proveedorGuardado,
-            proveedorToken: req.proveedores
+            proveedorToken: req.proveedores,
         });
     });
-
 });
 
-app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
-
+//actualiza un proveedor especifico
+app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
@@ -82,16 +81,16 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar proveedor',
-                errors: err
+                mensaje: "Error al buscar proveedor",
+                errors: err,
             });
         }
 
         if (!proveedor) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El proveedor con el ID' + id + ' no existe',
-                errors: { message: ' No existe un proveedor con ese ID' }
+                mensaje: "El proveedor con el ID" + id + " no existe",
+                errors: { message: " No existe un proveedor con ese ID" },
             });
         }
 
@@ -104,48 +103,45 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         proveedor.logo = body.img;
 
         proveedor.save((err, proveedorGuardado) => {
-
-
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar proveedor',
+                    mensaje: "Error al actualizar proveedor",
                     errors: err,
                 });
             }
-            proveedorGuardado.password = '=)';
+            proveedorGuardado.password = "=)";
             res.status(200).json({
                 ok: true,
-                proveedor: proveedorGuardado
+                proveedor: proveedorGuardado,
             });
         });
     });
 });
 
-
-app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+// borra un proveedor especifico
+app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Proveedor.findByIdAndRemove(id, (err, proveedorBorrado) => {
-
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar proveedor',
-                errors: err
+                mensaje: "Error al borrar proveedor",
+                errors: err,
             });
         }
 
         if (!proveedorBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe un proveedor con este ID',
-                errors: { message: 'No existe un proveedor con este ID' }
+                mensaje: "No existe un proveedor con este ID",
+                errors: { message: "No existe un proveedor con este ID" },
             });
         }
-        
+
         res.status(200).json({
             ok: true,
-            proveedor: proveedorBorrado
+            proveedor: proveedorBorrado,
         });
     });
 });

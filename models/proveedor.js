@@ -16,6 +16,7 @@ var proveedorSchema = new Schema({
     img: { type: String, required: false },
 });
 
+// validando path
 proveedorSchema.plugin(uniqueValidator, { message: 'debe ser único' });
 
 // exportando el modulo para utilizarlo
