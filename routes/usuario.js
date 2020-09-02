@@ -62,7 +62,6 @@ app.post("/", (req, res) => {
         telefono: body.telefono,
         role: body.role,
         email: body.email,
-        cuit: body.cuit,
         password: bcrypt.hashSync(body.password, 10),
     });
 
@@ -114,7 +113,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         usuario.cuit = body.cuit;
         usuario.telefono = body.telefono;
         usuario.role = body.role;
-        usuario.password = body.password;
+        usuario.password = usuario.password;
 
         usuario.save((err, usuarioGuardado) => {
             if (err) {
