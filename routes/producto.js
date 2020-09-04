@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
     Producto.find({})
         .skip(desde)
         .limit(15)
-        .populate("proveedor", "nombre email telefono")
+        .populate("proveedor", "nombre email telefono estado")
         .exec((err, productos, proveedor) => {
             if (err) {
                 return res.status(500).json({
@@ -43,6 +43,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         stock: body.stock,
         precio: body.precio,
         proveedor: body.proveedor,
+        estado: body.estado,
     });
     producto.save((err, productoGuardado) => {
         if (err) {
@@ -83,6 +84,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         producto.stock = body.stock;
         producto.precio = body.precio;
         producto.proveedor = body.proveedor;
+        producto.estado = body.estado;
         const productoGuardado = Producto.findByIdAndUpdate(id, req.body, {
             new: true,
         });

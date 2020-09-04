@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
     // enumerando
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
-    Proveedor.find({}, "nombre direccion cuit email telefono situacion_afip img ")
+    Proveedor.find({}, "nombre direccion cuit email telefono situacion_afip img estado")
         .skip(desde)
         .limit(15)
         // ejecuta, puede tener un error manejado.
@@ -52,6 +52,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         logo: body.logo,
         costo_unidad: body.costo_unidad,
         costo_mayorista: body.mayorista,
+        estado: body.estado,
     });
     // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
     proveedor.save((err, proveedorGuardado) => {
@@ -101,6 +102,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         proveedor.telefono = body.telefono;
         proveedor.situacion_afip = body.situacion_afip;
         proveedor.logo = body.img;
+        proveedor.estado = body.estado;
 
         proveedor.save((err, proveedorGuardado) => {
             if (err) {

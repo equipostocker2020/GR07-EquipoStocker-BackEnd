@@ -5,6 +5,11 @@ var uniqueValidator = require("mongoose-unique-validator");
 // importando esquema
 var Schema = mongoose.Schema;
 
+var estados = {
+    values: ["ACTIVO", "INACTIVO"],
+    message: "{VALUE} no es un estado permitido",
+};
+
 // generando campos al schema
 var productoSchema = new Schema({
     nombre: { type: String, required: [true, "El nombre es necesario"] },
@@ -18,6 +23,12 @@ var productoSchema = new Schema({
     proveedor: {
         type: Schema.Types.ObjectId,
         ref: "Proveedor",
+    },
+    estado: {
+        type: String,
+        required: true,
+        default: "ACTIVO",
+        enum: estados,
     },
 }, { collection: "productos" });
 
