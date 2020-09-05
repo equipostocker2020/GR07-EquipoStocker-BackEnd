@@ -23,6 +23,10 @@ var clienteSchema = new Schema({
     telefono: { type: String, required: false },
     dni: { type: String, unique: true, required: [true, "El dni es necesario"] },
     img: { type: String, required: false },
+    usuario_modifica: {
+        type: Schema.Types.ObjectId,
+        ref: "Usuario",
+    },
 });
 
 // validando path

@@ -13,7 +13,8 @@ app.get("/", (req, res) => {
         .skip(desde)
         .limit(15)
         .populate("proveedor", "nombre email telefono estado")
-        .exec((err, productos, proveedor) => {
+        .populate("usuario_modifica", "email")
+        .exec((err, productos, proveedor, usuario) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
                     ok: true,
                     productos: productos,
                     proveedor: proveedor,
+                    usuario_modifica: usuario,
                     total: conteo,
                 });
             });
@@ -44,6 +46,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         precio: body.precio,
         proveedor: body.proveedor,
         estado: body.estado,
+        usuario_modifica: body.usuario,
     });
     producto.save((err, productoGuardado) => {
         if (err) {
@@ -85,6 +88,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         producto.precio = body.precio;
         producto.proveedor = body.proveedor;
         producto.estado = body.estado;
+        producto.usuario_modifica = body.usuario;
         const productoGuardado = Producto.findByIdAndUpdate(id, req.body, {
             new: true,
         });

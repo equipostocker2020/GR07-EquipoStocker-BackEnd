@@ -25,6 +25,10 @@ var proveedorSchema = new Schema({
         default: "ACTIVO",
         enum: estados,
     },
+    usuario_modifica: {
+        type: Schema.Types.ObjectId,
+        ref: "Usuario",
+    },
 });
 
 // validando path
