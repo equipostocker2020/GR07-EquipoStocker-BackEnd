@@ -17,7 +17,6 @@ var productoSchema = new Schema({
         type: String,
         required: [true, "La descripcion es necesaria"],
     },
-    img: { type: String, required: false },
     stock: { type: String, required: [true, "El stock es necesario"] },
     precio: { type: String, required: [true, " El precio es necesario"] },
     proveedor: {
@@ -34,6 +33,7 @@ var productoSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Usuario",
     },
+    img: { type: String, required: false },
 }, { collection: "productos" });
 
 // validando path
