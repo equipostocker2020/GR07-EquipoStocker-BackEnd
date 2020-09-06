@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
     Cliente.find({}, "nombre apellido email direccion cuit telefono dni img")
         .skip(desde)
         .limit(15)
-        .populate("usuario_modifica", "email")
+        .populate("usuario", "email")
         // ejecuta, puede tener un error manejado.
         .exec((err, clientes, usuario) => {
             if (err) {
@@ -57,7 +57,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         telefono: body.telefono,
         dni: body.dni,
         img: body.img,
-        usuario_modifica: body.usuario,
+        usuario: body.usuario,
     });
 
     // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
@@ -108,7 +108,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         cliente.cuit = body.cuit;
         cliente.telefono = body.telefono;
         cliente.dni = body.dni;
-        producto.usuario_modifica = body.usuario;
+        cliente.usuario = body.usuario;
 
         cliente.save((err, clienteGuardado) => {
             if (err) {

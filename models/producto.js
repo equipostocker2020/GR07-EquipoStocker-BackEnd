@@ -29,7 +29,7 @@ var productoSchema = new Schema({
         default: "ACTIVO",
         enum: estados,
     },
-    usuario_modifica: {
+    usuario: {
         type: Schema.Types.ObjectId,
         ref: "Usuario",
     },

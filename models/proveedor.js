@@ -18,17 +18,17 @@ var proveedorSchema = new Schema({
     email: { type: String, unique: true, required: [true, 'El correo es necesario'] },
     telefono: { type: String, required: false },
     situacion_afip: { type: String, unique: true, required: [true, 'La situacion de AFIP es obligatoria'] },
-    img: { type: String, required: false },
     estado: {
         type: String,
         required: true,
         default: "ACTIVO",
         enum: estados,
     },
-    usuario_modifica: {
+    usuario: {
         type: Schema.Types.ObjectId,
         ref: "Usuario",
     },
+    img: { type: String, required: false },
 });
 
 // validando path

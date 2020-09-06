@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
     Proveedor.find({}, "nombre direccion cuit email telefono situacion_afip img estado")
         .skip(desde)
         .limit(15)
-        .populate("usuario_modifica", "email")
+        .populate("usuario", "email")
         // ejecuta, puede tener un error manejado.
         .exec((err, proveedor, usuario) => {
             if (err) {
@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
                 res.status(200).json({
                     ok: true,
                     proveedor: proveedor,
-                    usuario_modifica: usuario,
+                    usuario: usuario,
                     total: conteo,
                 });
             });
@@ -55,7 +55,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         costo_unidad: body.costo_unidad,
         costo_mayorista: body.mayorista,
         estado: body.estado,
-        usuario_modifica: body.usuario,
+        usuario: body.usuario,
     });
     // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
     proveedor.save((err, proveedorGuardado) => {
@@ -106,7 +106,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         proveedor.situacion_afip = body.situacion_afip;
         proveedor.logo = body.img;
         proveedor.estado = body.estado;
-        producto.usuario_modifica = body.usuario;
+        proveedor.usuario = body.usuario;
 
         proveedor.save((err, proveedorGuardado) => {
             if (err) {
