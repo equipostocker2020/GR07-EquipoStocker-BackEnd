@@ -6,6 +6,8 @@ var uniqueValidator = require("mongoose-unique-validator");
 var Schema = mongoose.Schema;
 
 
+
+
 // generando campos al schema
 var clienteSchema = new Schema({
     nombre: { type: String, required: [true, "El nombre es necesario"] },
