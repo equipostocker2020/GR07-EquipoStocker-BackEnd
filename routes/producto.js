@@ -1,4 +1,3 @@
-
 // requires
 var express = require("express");
 var app = express();
@@ -14,7 +13,7 @@ app.get("/", (req, res) => {
         .skip(desde)
         .limit(15)
         .populate("proveedor", "nombre email telefono estado")
-        .populate("usuario", "email")
+        .populate("usuario_modifica", "email")
         .exec((err, productos, proveedor, usuario) => {
             if (err) {
                 return res.status(500).json({
@@ -28,7 +27,37 @@ app.get("/", (req, res) => {
                     ok: true,
                     productos: productos,
                     proveedor: proveedor,
-                    usuario: usuario,
+                    usuario_modifica: usuario,
+                    total: conteo,
+                });
+            });
+        });
+});
+
+app.get("/:id", (req, res) => {
+    var desde = req.params.desde || 0;
+    var id = req.params.id;
+    desde = Number(desde);
+
+    Producto.findById(id)
+        .skip(desde)
+        .limit(15)
+        .populate("proveedor", "nombre email telefono estado")
+        .populate("usuario_modifica", "email")
+        .exec((err, productos, proveedor, usuario) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: "Error cargando productos",
+                    errors: err,
+                });
+            }
+            Producto.count({}, (err, conteo) => {
+                res.status(200).json({
+                    ok: true,
+                    productos: productos,
+                    proveedor: proveedor,
+                    usuario_modifica: usuario,
                     total: conteo,
                 });
             });
@@ -47,7 +76,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         precio: body.precio,
         proveedor: body.proveedor,
         estado: body.estado,
-        usuario: body.usuario,
+        usuario_modifica: body.usuario,
     });
     producto.save((err, productoGuardado) => {
         if (err) {
@@ -89,7 +118,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         producto.precio = body.precio;
         producto.proveedor = body.proveedor;
         producto.estado = body.estado;
-        producto.usuario = body.usuario;
+        producto.usuario_modifica = body.usuario;
         const productoGuardado = Producto.findByIdAndUpdate(id, req.body, {
             new: true,
         });
