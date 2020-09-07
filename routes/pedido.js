@@ -13,8 +13,9 @@ app.get("/", (req, res) => {
     Pedido.find({}, " numero_pedido cantidad estado total")
         .skip(desde)
         .limit(15)
-        .populate({path: 'producto', model: Producto})
-        .populate({path: 'cliente', model: Cliente})
+        .populate({ path: 'producto', model: Producto })
+        .populate({ path: 'cliente', model: Cliente })
+        .populate("usuario", "email")
         .exec((err, pedidos, clientes, productos) => {
             if (err) {
                 return res.status(500).json({
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
                     pedidos: pedidos,
                     clientes: clientes,
                     productos: productos,
+
                     total: conteo
                 });
             });
@@ -45,7 +47,9 @@ app.get("/:id", (req, res) => {
     conteo = 0;
 
     Pedido.find({})
-    .exec((err, pedidos, clientes, productos) => {
+
+    .exec((err, pedidos, clientes, productos, usuario) => {
+
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -61,19 +65,20 @@ app.get("/:id", (req, res) => {
             });
         }
         console.log(pedidos.length)
-        for(i ; i < pedidos.length; i++){
-        if(pedidos[i].cliente == id){
-            pedido.push(pedidos[i])
-            conteo = conteo + 1;
+        for (i; i < pedidos.length; i++) {
+            if (pedidos[i].cliente == id) {
+                pedido.push(pedidos[i])
+                conteo = conteo + 1;
+            }
         }
-    }
-    res.status(200).json({
-        ok: true,
-        pedidos: pedido,
-        clientes: clientes,
-        productos: productos,
-        total: conteo
-    });    
+        res.status(200).json({
+            ok: true,
+            pedidos: pedido,
+            clientes: clientes,
+            productos: productos,
+            usuario: usuario,
+            total: conteo
+        });
     });
 
 });
@@ -83,7 +88,7 @@ app.get("/:id", (req, res) => {
 app.post("/", (req, res) => {
     var body = req.body;
     var resta_producto = 0;
-    
+
     var producto = Producto.findById(body.producto, (err, producto) => {
         if (err) {
             return res.status(400).json({
@@ -100,29 +105,30 @@ app.post("/", (req, res) => {
             });
         }
 
-        var pedidofalso = new Pedido({estado: body.estado});
+        var pedidofalso = new Pedido({ estado: body.estado });
 
         var pedido = new Pedido({
-            numero_pedido : "P-" + pedidofalso._id,
+            numero_pedido: "P-" + pedidofalso._id,
             cliente: body.cliente,
             producto: body.producto,
             cantidad: body.cantidad,
             estado: body.estado,
             total: producto.precio * body.cantidad,
+            usuario: body.usuario,
         });
 
-        
-        if(producto.stock > body.cantidad){
-        producto.stock = producto.stock - body.cantidad;
-        producto.save(producto);
-        }else{
+
+        if (producto.stock >= body.cantidad) {
+            producto.stock = producto.stock - body.cantidad;
+            producto.save(producto);
+        } else {
             return res.status(400).json({
                 ok: false,
                 mensaje: "El producto con la cantidad" + body.cantidad + " supera el stock",
                 errors: { message: "La cantidad supera el stock" },
             });
         }
-        
+
 
         pedido.save((err, pedidoGuardado) => {
             if (err) {

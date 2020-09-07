@@ -25,8 +25,8 @@ var pedidoSchema = new Schema({
         enum: estadoPedido,
     },
     total: { type: Number, required: [false] },
-    numero_pedido: { type: String, required: [false]},
-    usuario_modifica: {
+    numero_pedido: { type: String, required: [false] },
+    usuario: {
         type: Schema.Types.ObjectId,
         ref: "Usuario",
     },

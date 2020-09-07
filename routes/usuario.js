@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
     Usuario.find({},
-            "nombre apellido empresa email img role password cuit dni direccion"
+            "nombre apellido empresa email img role password cuit dni direccion telefono"
         )
         .skip(desde)
         .limit(15)
