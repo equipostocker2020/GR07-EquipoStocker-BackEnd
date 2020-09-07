@@ -100,7 +100,7 @@ app.post("/", (req, res) => {
         if (!producto) {
             return res.status(400).json({
                 ok: false,
-                mensaje: "El producto con el ID" + id + " no existe",
+                mensaje: "El producto con el ID " + id + " no existe",
                 errors: { message: "No existe un producto con este ID" },
             });
         }
@@ -124,7 +124,7 @@ app.post("/", (req, res) => {
         } else {
             return res.status(400).json({
                 ok: false,
-                mensaje: "El producto con la cantidad" + body.cantidad + " supera el stock",
+                mensaje: "El producto con la cantidad " + body.cantidad + " supera el stock",
                 errors: { message: "La cantidad supera el stock" },
             });
         }
@@ -142,6 +142,74 @@ app.post("/", (req, res) => {
                 ok: true,
                 pedido: pedidoGuardado,
             });
+        });
+    });
+});
+
+
+app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    var body = req.body;
+    Pedido.findById(id, (err, pedido) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: "Error al buscar pedido",
+                errors: err,
+            });
+        }
+        if (!pedido) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: "El pedido con el ID" + id + " no existe",
+                errors: { message: "No existe un pedido con este ID" },
+            });
+        }
+        pedido.cliente = body.cliente;
+        pedido.producto = body.producto;
+        pedido.cantidad = body.cantidad;
+        const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
+            new: true,
+        });
+
+        pedido.save((err, pedidoGuardado) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: "Error al actualizar producto",
+                    errors: err,
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                pedido: pedidoGuardado,
+            });
+        });
+    });
+});
+
+app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    Pedido.findByIdAndRemove(id, (err, pedidoBorrado) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: "Error al borrar pedido",
+                errors: err,
+            });
+        }
+
+        if (!pedidoBorrado) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: "No existe un pedido con este ID",
+                errors: { message: "No existe un pedido con este ID" },
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            pedido: pedidoBorrado,
         });
     });
 });
