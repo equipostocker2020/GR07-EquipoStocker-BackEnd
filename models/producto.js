@@ -17,7 +17,7 @@ var productoSchema = new Schema({
         type: String,
         required: [true, "La descripcion es necesaria"],
     },
-    stock: { type: String, required: [true, "El stock es necesario"] },
+    stock: { type: Number, required: [true, "El stock es necesario"] },
     precio: { type: String, required: [true, " El precio es necesario"] },
     proveedor: {
         type: Schema.Types.ObjectId,

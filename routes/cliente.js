@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
     // enumerando
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
-    Cliente.find({}, "nombre apellido email direccion cuit telefono dni img")
+    Cliente.find({}, "nombre apellido email direccion cuit telefono dni img estado")
         .skip(desde)
         .limit(15)
         .populate("usuario", "email")
@@ -58,6 +58,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         dni: body.dni,
         img: body.img,
         usuario: body.usuario,
+        estado: body.estado,
     });
 
     // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
@@ -109,6 +110,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         cliente.telefono = body.telefono;
         cliente.dni = body.dni;
         cliente.usuario = body.usuario;
+        cliente.estado = body.estado;
 
         cliente.save((err, clienteGuardado) => {
             if (err) {

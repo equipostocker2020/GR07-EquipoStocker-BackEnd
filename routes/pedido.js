@@ -5,7 +5,6 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 const Cliente = require("../models/cliente");
 var Producto = require("../models/producto");
 
-
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
@@ -13,8 +12,8 @@ app.get("/", (req, res) => {
     Pedido.find({}, " numero_pedido cantidad estado total")
         .skip(desde)
         .limit(15)
-        .populate({ path: 'producto', model: Producto })
-        .populate({ path: 'cliente', model: Cliente })
+        .populate({ path: "producto", model: Producto })
+        .populate({ path: "cliente", model: Cliente })
         .populate("usuario", "email")
         .exec((err, pedidos, clientes, productos) => {
             if (err) {
@@ -31,7 +30,7 @@ app.get("/", (req, res) => {
                     clientes: clientes,
                     productos: productos,
 
-                    total: conteo
+                    total: conteo,
                 });
             });
         });
@@ -41,49 +40,44 @@ app.get("/:id", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
 
-    let i = 0
+    let i = 0;
     var id = req.params.id;
     let pedido = [];
     conteo = 0;
 
     Pedido.find({})
-
-    .exec((err, pedidos, clientes, productos, usuario) => {
-
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: "Error cargando pedido con ese ID",
-                errors: err,
-            });
-        }
-        if (!pedidos) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: "El pedido con el ID" + id + " no existe",
-                errors: { message: "No existe un producto con este ID" },
-            });
-        }
-        console.log(pedidos.length)
-        for (i; i < pedidos.length; i++) {
-            if (pedidos[i].cliente == id) {
-                pedido.push(pedidos[i])
-                conteo = conteo + 1;
+        .exec((err, pedidos, clientes, productos, usuario) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: "Error cargando pedido con ese ID",
+                    errors: err,
+                });
             }
-        }
-        res.status(200).json({
-            ok: true,
-            pedidos: pedido,
-            clientes: clientes,
-            productos: productos,
-            usuario: usuario,
-            total: conteo
+            if (!pedidos) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: "El pedido con el ID" + id + " no existe",
+                    errors: { message: "No existe un producto con este ID" },
+                });
+            }
+            console.log(pedidos.length);
+            for (i; i < pedidos.length; i++) {
+                if (pedidos[i].cliente == id) {
+                    pedido.push(pedidos[i]);
+                    conteo = conteo + 1;
+                }
+            }
+            res.status(200).json({
+                ok: true,
+                pedidos: pedido,
+                clientes: clientes,
+                productos: productos,
+                usuario: usuario,
+                total: conteo,
+            });
         });
-    });
-
 });
-
-
 
 app.post("/", (req, res) => {
     var body = req.body;
@@ -117,7 +111,6 @@ app.post("/", (req, res) => {
             usuario: body.usuario,
         });
 
-
         if (producto.stock >= body.cantidad) {
             producto.stock = producto.stock - body.cantidad;
             producto.save(producto);
@@ -128,7 +121,6 @@ app.post("/", (req, res) => {
                 errors: { message: "La cantidad supera el stock" },
             });
         }
-
 
         pedido.save((err, pedidoGuardado) => {
             if (err) {
@@ -145,7 +137,6 @@ app.post("/", (req, res) => {
         });
     });
 });
-
 
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
@@ -168,6 +159,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         pedido.cliente = body.cliente;
         pedido.producto = body.producto;
         pedido.cantidad = body.cantidad;
+        pedido.estado = body.estado;
         const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
             new: true,
         });
@@ -213,6 +205,5 @@ app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
         });
     });
 });
-
 
 module.exports = app;
