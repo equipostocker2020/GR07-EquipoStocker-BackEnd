@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
         .skip(desde)
         .limit(15)
         .populate("proveedor", "nombre email telefono estado")
-        .populate("usuario", "email")
+        .populate("usuario")
         .exec((err, productos, proveedor, usuario) => {
             if (err) {
                 return res.status(500).json({
