@@ -61,7 +61,6 @@ app.get("/:id", (req, res) => {
                     errors: { message: "No existe un producto con este ID" },
                 });
             }
-            console.log(pedidos.length);
             for (i; i < pedidos.length; i++) {
                 if (pedidos[i].cliente == id) {
                     pedido.push(pedidos[i]);
