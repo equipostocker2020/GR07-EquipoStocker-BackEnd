@@ -13,6 +13,7 @@ var PedidoRoutes = require("./routes/pedido");
 var busquedaRoutes = require("./routes/busqueda");
 var uploadRoutes = require("./routes/upload");
 var imagenesRoutes = require("./routes/imagenes");
+var sendEmail = require("./routes/sendEmail")
 
 //inicializando
 var app = express();
@@ -49,6 +50,7 @@ app.use("/pedido", PedidoRoutes);
 app.use("/busqueda", busquedaRoutes);
 app.use("/img", imagenesRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/send-email", sendEmail);
 
 // escuchando peticiones
 app.listen(3000, () => {
