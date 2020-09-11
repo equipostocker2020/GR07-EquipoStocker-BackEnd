@@ -46,7 +46,10 @@ app.get("/:id", (req, res) => {
     conteo = 0;
 
     Pedido.find({})
-        .exec((err, pedidos, clientes, productos, usuario) => {
+        .skip(desde)
+        .limit(15)
+        .populate({ path: "producto", model: Producto })
+        .exec((err, pedidos, clientes, productos) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
@@ -54,25 +57,19 @@ app.get("/:id", (req, res) => {
                     errors: err,
                 });
             }
-            if (!pedidos) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: "El pedido con el ID" + id + " no existe",
-                    errors: { message: "No existe un producto con este ID" },
-                });
-            }
+
             for (i; i < pedidos.length; i++) {
                 if (pedidos[i].cliente == id) {
                     pedido.push(pedidos[i]);
                     conteo = conteo + 1;
                 }
             }
+           
             res.status(200).json({
                 ok: true,
                 pedidos: pedido,
                 clientes: clientes,
                 productos: productos,
-                usuario: usuario,
                 total: conteo,
             });
         });
