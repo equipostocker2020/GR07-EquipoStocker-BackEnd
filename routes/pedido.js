@@ -186,7 +186,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
             });
         }
 
-        Producto.findById(body.producto, (err, producto) => {
+        Producto.findById(pedido.producto, (err, producto) => {
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -202,29 +202,97 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 });
             }
 
-      
-            if (producto.stock >= body.cantidad) {
-                if (pedido.cantidad < body.cantidad) {
-                    cantidadAux = body.cantidad - pedido.cantidad;
-                    producto.stock = producto.stock - cantidadAux;
-                    producto.save(producto);
-                } else if (pedido.cantidad > body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
-                    cantidadAux = pedido.cantidad - body.cantidad;
-                    producto.stock= producto.stock + cantidadAux;
-                    producto.save(producto);
-                } 
-            } else {
+        if(pedido.producto != body.producto){
+            
+            Producto.findById(body.producto, (err, productoNuevo) => {
+                if (err) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: "Error al buscar producto",
+                        errors: err,
+                    });
+                }
+                if (!productoNuevo) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: "El producto con el ID " + id + " no existe",
+                        errors: { message: "No existe un producto con este ID" },
+                    });
+                }
+
+
+            if (productoNuevo.stock >= body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                productoNuevo.stock = productoNuevo.stock - body.cantidad;
+                productoNuevo.save(productoNuevo);
+                producto.stock = producto.stock + pedido.cantidad;
+                producto.save(producto);
+               
+            }else if (pedido.cantidad < body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                productoNuevo.stock= productoNuevo.stock - body.cantidad;
+                productoNuevo.save(productoNuevo);
+                producto.stock = producto.stock + pedido.cantidad;
+                producto.save(producto);
+
+            }
+            else if (body.estado == 'cancelado') {
+                productoNuevo.stock = productoNuevo.stock + pedido.cantidad;
+                productoNuevo.save(productoNuevo);
+            }
+            else {
                 return res.status(400).json({
                     ok: false,
                     mensaje: "El producto con la cantidad " + body.cantidad + " supera el stock",
                     errors: { message: "La cantidad supera el stock" },
                 });
             }
-            if (body.estado == 'cancelado') {
+
+
+            pedido.cliente = body.cliente;
+            pedido.producto = body.producto;
+            pedido.cantidad = body.cantidad;
+            pedido.estado = body.estado;
+            pedido.total = productoNuevo.precio * body.cantidad;
+            const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
+                new: true,
+            });
+
+            pedido.save((err, pedidoGuardado) => {
+                if (err) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: "Error al actualizar producto",
+                        errors: err,
+                    });
+                }
+                res.status(200).json({
+                    ok: true,
+                    pedido: pedidoGuardado,
+                });
+            });
+        });
+        }else{
+            if (producto.stock >= body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                if (pedido.cantidad < body.cantidad) {
+                    cantidadAux = body.cantidad - pedido.cantidad;
+                    producto.stock = producto.stock - cantidadAux;
+                    producto.save(producto);
+                } else if (pedido.cantidad < body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                    cantidadAux = pedido.cantidad - body.cantidad;
+                    producto.stock= producto.stock + cantidadAux;
+                    producto.save(producto);
+                } 
+            }
+            else if (body.estado == 'cancelado') {
                 producto.stock = producto.stock + pedido.cantidad;
                 producto.save(producto);
             }
-        
+            else {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: "El producto con la cantidad " + body.cantidad + " supera el stock",
+                    errors: { message: "La cantidad supera el stock" },
+                });
+            }
 
             pedido.cliente = body.cliente;
             pedido.producto = body.producto;
@@ -248,6 +316,8 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     pedido: pedidoGuardado,
                 });
             });
+        }
+
         });
 
     });
