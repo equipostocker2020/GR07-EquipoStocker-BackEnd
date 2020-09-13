@@ -186,7 +186,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
             });
         }
 
-        Producto.findById(pedido.producto, (err, producto) => {
+        Producto.findById(body.producto, (err, producto) => {
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -201,10 +201,12 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     errors: { message: "No existe un producto con este ID" },
                 });
             }
-            if(producto.nombre == body.nombre){
+
+      
             if (producto.stock >= body.cantidad) {
                 if (pedido.cantidad < body.cantidad) {
-                    producto.stock = producto.stock - body.cantidad;
+                    cantidadAux = body.cantidad - pedido.cantidad;
+                    producto.stock = producto.stock - cantidadAux;
                     producto.save(producto);
                 } else if (pedido.cantidad > body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                     cantidadAux = pedido.cantidad - body.cantidad;
@@ -222,46 +224,35 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 producto.stock = producto.stock + pedido.cantidad;
                 producto.save(producto);
             }
-        } else {
-            producto.stock = producto.stock + pedido.cantidad;
-            producto.save(producto);
-            Producto.findById(body.producto, (err, producto2) => {
+        
+
+            pedido.cliente = body.cliente;
+            pedido.producto = body.producto;
+            pedido.cantidad = body.cantidad;
+            pedido.estado = body.estado;
+            pedido.total = producto.precio * body.cantidad;
+            const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
+                new: true,
+            });
+
+            pedido.save((err, pedidoGuardado) => {
                 if (err) {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: "Error al buscar producto",
+                        mensaje: "Error al actualizar producto",
                         errors: err,
                     });
                 }
-                if (!producto2) {
-                    return res.status(400).json({
-                        ok: false,
-                        mensaje: "El producto con el ID " + id + " no existe",
-                        errors: { message: "No existe un producto con este ID" },
-                    });
-                }
-                        producto2.stock = producto2.stock - body.cantidad;
-                        producto2.save(producto2);
+                res.status(200).json({
+                    ok: true,
+                    pedido: pedidoGuardado,
                 });
-            
-        }
-    });
-
-        pedido.save((err, pedidoGuardado) => {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: "Error al actualizar producto",
-                    errors: err,
-                });
-            }
-            res.status(200).json({
-                ok: true,
-                pedido: pedidoGuardado,
             });
         });
+
     });
 });
+
 
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
