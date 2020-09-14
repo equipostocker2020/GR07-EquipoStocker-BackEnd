@@ -270,17 +270,21 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 });
             });
         });
+
+
+
+        //.............
         }else{
             if (producto.stock >= body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                 if (pedido.cantidad < body.cantidad) {
                     cantidadAux = body.cantidad - pedido.cantidad;
                     producto.stock = producto.stock - cantidadAux;
                     producto.save(producto);
-                } else if (pedido.cantidad < body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                } else if (body.cantidad < pedido.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                     cantidadAux = pedido.cantidad - body.cantidad;
                     producto.stock= producto.stock + cantidadAux;
                     producto.save(producto);
-                } 
+                
             }
             else if (body.estado == 'cancelado') {
                 producto.stock = producto.stock + pedido.cantidad;
@@ -293,6 +297,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     errors: { message: "La cantidad supera el stock" },
                 });
             }
+        }
 
             pedido.cliente = body.cliente;
             pedido.producto = body.producto;
