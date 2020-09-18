@@ -17,7 +17,7 @@ var proveedorSchema = new Schema({
     cuit: { type: String, unique: true, required: [true, 'El CUIT es necesario'] },
     email: { type: String, unique: true, required: [true, 'El correo es necesario'] },
     telefono: { type: String, required: false },
-    situacion_afip: { type: String, unique: true, required: [true, 'La situacion de AFIP es obligatoria'] },
+    situacion_afip: { type: String, required: [true, 'La situacion de AFIP es obligatoria'] },
     estado: {
         type: String,
         required: true,
