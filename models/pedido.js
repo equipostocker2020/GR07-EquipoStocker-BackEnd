@@ -11,11 +11,13 @@ var estadoPedido = {
 var pedidoSchema = new Schema({
     cliente: {
         type: Schema.Types.ObjectId,
-        ref: "Cliente"
+        ref: "Cliente",
+        required: [false, "El cliente es necesario"] 
     },
     producto: {
         type: Schema.Types.ObjectId,
-        ref: "Producto"
+        ref: "Producto",
+        required: [false, "El producto es necesario"] 
     },
     cantidad: { type: Number, required: [false, "la cantidad es necesaria"] },
     estado: {

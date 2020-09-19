@@ -90,7 +90,7 @@ actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             pathViejo = `./uploads/usuarios/${usuario.img}`;
-            borrarImagen(pathViejo);
+            //borrarImagen(pathViejo);
             usuario.img = nombreArchivo;
             await usuario.save();
             return true;

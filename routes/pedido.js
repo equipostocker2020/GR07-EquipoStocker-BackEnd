@@ -4,6 +4,7 @@ var Pedido = require("../models/pedido");
 var mdAutenticacion = require("../middlewares/autenticacion");
 const Cliente = require("../models/cliente");
 var Producto = require("../models/producto");
+var Usuario = require("../models/usuario");
 
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;
@@ -14,7 +15,7 @@ app.get("/", (req, res) => {
         .limit(15)
         .populate({ path: "producto", model: Producto })
         .populate({ path: "cliente", model: Cliente })
-        .populate("usuario", "email")
+        .populate({ path: "usuario", model: Usuario })
         .exec((err, pedidos, clientes, productos) => {
             if (err) {
                 return res.status(500).json({
@@ -251,6 +252,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     pedido.cantidad = body.cantidad;
                     pedido.estado = body.estado;
                     pedido.total = productoNuevo.precio * body.cantidad;
+                    pedido.usuario = body.usuario;
                     const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
                         new: true,
                     });
@@ -303,6 +305,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 pedido.cantidad = body.cantidad;
                 pedido.estado = body.estado;
                 pedido.total = producto.precio * body.cantidad;
+                pedido.usuario = body.usuario;
                 const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
                     new: true,
                 });
