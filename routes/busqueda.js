@@ -5,6 +5,7 @@ var Usuario = require("../models/usuario");
 var Producto = require("../models/producto");
 var Proveedor = require("../models/proveedor");
 var Cliente = require("../models/cliente");
+var Pedido = require("../models/pedido");
 
 // busqueda por coleccion..
 
@@ -27,6 +28,9 @@ app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
             break;
         case "cliente":
             promesa = buscarCliente(busqueda, regex);
+            break;
+        case "pedido":
+            promesa = buscarPedido(busqueda, regex);
             break;
 
         default:
@@ -57,6 +61,7 @@ app.get("/todo/:busqueda", (req, res, next) => {
         buscarProductos(busqueda, regex, "producto"),
         buscarProveedor(busqueda, regex, "proveedor"),
         buscarCliente(busqueda, regex, "cliente"),
+        buscarPedido(busqueda, regex, "pedido"),
     ]).then((respuestas) => {
         res.status(200).json({
             ok: true,
@@ -64,6 +69,7 @@ app.get("/todo/:busqueda", (req, res, next) => {
             productos: respuestas[1],
             proveedores: respuestas[2],
             cliente: respuestas[3],
+            pedido: respuestas[4],
         });
     });
 });
@@ -124,6 +130,21 @@ function buscarCliente(busqueda, regex) {
                     reject("Error al cargar cliente");
                 } else {
                     resolve(cliente);
+                }
+            });
+    });
+}
+
+function buscarPedido(busqueda, regex) {
+    return new Promise((resolve, reject) => {
+        Pedido.
+        find({ numero_pedido: regex})
+        .populate("producto", "cliente", "numero_pedido cantidad")
+            .exec((err, pedido) => {
+                if (err) {
+                    reject("Error al cargar pedido", err);
+                } else {
+                    resolve(pedido);
                 }
             });
     });
