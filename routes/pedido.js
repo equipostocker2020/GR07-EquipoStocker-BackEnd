@@ -167,6 +167,7 @@ app.post("/", (req, res) => {
     });
 });
 
+
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -187,6 +188,20 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
             });
         }
 
+        if (pedido.estado != body.estado) {
+                    pedido.estado = body.estado;
+                    const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
+                        new: true,
+                    });
+                    return pedido.save(( pedidoGuardado) => {
+                        res.status(200).json({
+                            ok: true,
+                            pedido: pedidoGuardado,
+                        });
+                    });
+           
+        }
+
         Producto.findById(pedido.producto, (err, producto) => {
             if (err) {
                 return res.status(400).json({
@@ -204,7 +219,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
             }
 
             if (pedido.producto != body.producto) {
-
+      
                 Producto.findById(body.producto, (err, productoNuevo) => {
                     if (err) {
                         return res.status(400).json({
@@ -222,7 +237,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     }
 
 
-                    if (productoNuevo.stock >= body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                    if (productoNuevo.stock > body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                         productoNuevo.stock = productoNuevo.stock - body.cantidad;
                         productoNuevo.save(productoNuevo);
                         producto.stock = producto.stock + pedido.cantidad;
@@ -234,7 +249,9 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         producto.stock = producto.stock + pedido.cantidad;
                         producto.save(producto);
 
-                    } else if (body.estado == 'cancelado') {
+                    }else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                        pedido.cliente = body.cliente;
+                    }else if (body.estado == 'cancelado') {
                         productoNuevo.stock = productoNuevo.stock + pedido.cantidad;
                         productoNuevo.save(productoNuevo);
                     } else {
@@ -272,7 +289,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     });
                 });
             } else {
-                if (producto.stock >= body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                if (producto.stock > body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                     if (pedido.cantidad < body.cantidad) {
                         cantidadAux = body.cantidad - pedido.cantidad;
                         producto.stock = producto.stock - cantidadAux;
@@ -282,6 +299,8 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         producto.stock = producto.stock + cantidadAux;
                         producto.save(producto);
 
+                    }else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                        pedido.cliente = body.cliente;
                     } else if (body.estado == 'cancelado') {
                         producto.stock = producto.stock + pedido.cantidad;
                         producto.save(producto);
