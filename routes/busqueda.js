@@ -137,9 +137,11 @@ function buscarCliente(busqueda, regex) {
 
 function buscarPedido(busqueda, regex) {
     return new Promise((resolve, reject) => {
-        Pedido.
-        find({ numero_pedido: regex})
-        .populate("producto", "cliente", "numero_pedido cantidad")
+        Pedido.find({ estado: regex })
+            .populate("pedido", "cliente producto cantidad estado total numero_pedido Usuario")
+            .populate("cliente", "nombre apellido email cuit dni direccion img telefono dni")
+            .populate("producto", "nombre ")
+            .populate("usuario", "mail ")
             .exec((err, pedido) => {
                 if (err) {
                     reject("Error al cargar pedido", err);
