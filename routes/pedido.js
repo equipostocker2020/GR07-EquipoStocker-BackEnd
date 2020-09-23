@@ -188,7 +188,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
             });
         }
 
-        if (pedido.estado != body.estado) {
+        if (pedido.estado != body.estado && body.estado != "cancelado") {
                     pedido.estado = body.estado;
                     const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
                         new: true,
