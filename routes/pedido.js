@@ -5,6 +5,7 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 const Cliente = require("../models/cliente");
 var Producto = require("../models/producto");
 var Usuario = require("../models/usuario");
+const uuidv4 = require("uuid/v4");
 
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;
@@ -129,7 +130,9 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
             });
         }
 
-        var numero_pepdido = "P-" + Math.floor(Math.random() * 999999);
+        
+        let idUnico = uuidv4();
+        var numero_pepdido = "P-" + idUnico;
 
         var pedido = new Pedido({
             numero_pedido: numero_pepdido,
