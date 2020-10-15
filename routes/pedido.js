@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
                     errors: err,
                 });
             }
+
             Pedido.count({}, (err, conteo) => {
                 res.status(200).json({
                     ok: true,
@@ -128,10 +129,10 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
             });
         }
 
-        var pedidofalso = new Pedido({ estado: body.estado });
+        var numero_pepdido = "P-" + Math.floor(Math.random() * 999999);
 
         var pedido = new Pedido({
-            numero_pedido: "P-" + pedidofalso._id,
+            numero_pedido: numero_pepdido,
             cliente: body.cliente,
             producto: body.producto,
             cantidad: body.cantidad,
