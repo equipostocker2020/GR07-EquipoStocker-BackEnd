@@ -132,10 +132,10 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
 
         
         let idUnico = uuidv4();
-        var numero_pepdido = "P-" + idUnico;
+        var numero_pedido = "P-" + idUnico;
 
         var pedido = new Pedido({
-            numero_pedido: numero_pepdido,
+            numero_pedido: numero_pedido,
             cliente: body.cliente,
             producto: body.producto,
             cantidad: body.cantidad,
