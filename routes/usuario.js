@@ -14,15 +14,13 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 // falta encriptar contraseña.
 var bcrypt = require("bcryptjs");
 
-
 // obtener usuarios...
 app.get("/", (req, res) => {
     // enumerando
     var desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
     Usuario.find({},
-            "nombre apellido empresa email img role password cuit dni direccion telefono"
-        )
+            "nombre apellido empresa email img role password cuit dni direccion telefono usuario")
         .skip(desde)
         .limit(15)
 
@@ -67,6 +65,7 @@ app.post("/", (req, res) => {
                     role: "ADMIN_ROLE",
                     email: body.email,
                     password: bcrypt.hashSync(body.password, 10),
+                    usuario: body.email,
                 });
             } else {
                 var usuario = new Usuario({
@@ -81,11 +80,9 @@ app.post("/", (req, res) => {
                     role: "USER_ROLE",
                     email: body.email,
                     password: bcrypt.hashSync(body.password, 10),
+                    usuario: body.email,
                 });
             }
-
-
-
             // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
 
             usuario.save((err, usuarioGuardado) => {
@@ -137,6 +134,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
         usuario.telefono = body.telefono;
         usuario.role = body.role;
         usuario.password = usuario.password;
+        usuario.usuario = body.email;
 
         usuario.save((err, usuarioGuardado) => {
             if (err) {

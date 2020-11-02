@@ -25,14 +25,12 @@ app.get("/", (req, res) => {
                     errors: err,
                 });
             }
-
             Pedido.count({}, (err, conteo) => {
                 res.status(200).json({
                     ok: true,
                     pedidos: pedidos,
                     clientes: clientes,
                     productos: productos,
-
                     total: conteo,
                 });
             });
@@ -42,7 +40,6 @@ app.get("/", (req, res) => {
 app.get("/:id", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
-
     let i = 0;
     var id = req.params.id;
     let pedido = [];
@@ -70,11 +67,9 @@ app.get("/:id", (req, res) => {
     });
 });
 
-
 app.get("/cliente/:id", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
-
     let i = 0;
     var id = req.params.id;
     let pedido = [];
@@ -92,14 +87,12 @@ app.get("/cliente/:id", (req, res) => {
                     errors: err,
                 });
             }
-
             for (i; i < pedidos.length; i++) {
                 if (pedidos[i].cliente == id) {
                     pedido.push(pedidos[i]);
                     conteo = conteo + 1;
                 }
             }
-
             res.status(200).json({
                 ok: true,
                 pedidos: pedido,
@@ -110,7 +103,7 @@ app.get("/cliente/:id", (req, res) => {
         });
 });
 
-app.post("/", mdAutenticacion.verificaToken,(req, res) => {
+app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     var body = req.body;
     var resta_producto = 0;
 
@@ -130,7 +123,7 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
             });
         }
 
-        if(body.cantidad <= 0){
+        if (body.cantidad <= 0) {
             return res.status(400).json({
                 ok: false,
                 mensaje: "La cantidad " + body.cantidad + " es menor o igual a 0",
@@ -138,7 +131,6 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
             });
         }
 
-        
         let idUnico = uuidv4();
         var numero_pedido = "P-" + idUnico;
 
@@ -179,7 +171,6 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
     });
 });
 
-
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -199,22 +190,20 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 errors: { message: "No existe un pedido con este ID" },
             });
         }
-
         if (pedido.estado != body.estado && body.estado != "cancelado") {
-                    pedido.estado = body.estado;
-                    const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
-                        new: true,
-                    });
-                    return pedido.save(( pedidoGuardado) => {
-                        res.status(200).json({
-                            ok: true,
-                            pedido: pedidoGuardado,
-                        });
-                    });
-           
-        }
+            pedido.estado = body.estado;
+            const pedidoGuardado = Pedido.findByIdAndUpdate(id, req.body, {
+                new: true,
+            });
+            return pedido.save((pedidoGuardado) => {
+                res.status(200).json({
+                    ok: true,
+                    pedido: pedidoGuardado,
+                });
+            });
 
-        if(body.cantidad <= 0){
+        }
+        if (body.cantidad <= 0) {
             return res.status(400).json({
                 ok: false,
                 mensaje: "La cantidad " + body.cantidad + " es menor o igual a 0",
@@ -237,9 +226,8 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     errors: { message: "No existe un producto con este ID" },
                 });
             }
-
             if (pedido.producto != body.producto) {
-      
+
                 Producto.findById(body.producto, (err, productoNuevo) => {
                     if (err) {
                         return res.status(400).json({
@@ -256,7 +244,6 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         });
                     }
 
-
                     if (productoNuevo.stock > body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                         productoNuevo.stock = productoNuevo.stock - body.cantidad;
                         productoNuevo.save(productoNuevo);
@@ -269,9 +256,9 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         producto.stock = producto.stock + pedido.cantidad;
                         producto.save(producto);
 
-                    }else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                    } else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                         pedido.cliente = body.cliente;
-                    }else if (body.estado == 'cancelado') {
+                    } else if (body.estado == 'cancelado') {
                         productoNuevo.stock = productoNuevo.stock + pedido.cantidad;
                         productoNuevo.save(productoNuevo);
                     } else {
@@ -281,8 +268,6 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                             errors: { message: "La cantidad supera el stock" },
                         });
                     }
-
-
 
                     pedido.cliente = body.cliente;
                     pedido.producto = body.producto;
@@ -319,7 +304,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         producto.stock = producto.stock + cantidadAux;
                         producto.save(producto);
 
-                    }else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
+                    } else if (pedido.cantidad == body.cantidad && (body.estado == 'enviado' || body.estado == 'preparación')) {
                         pedido.cliente = body.cliente;
                     } else if (body.estado == 'cancelado') {
                         producto.stock = producto.stock + pedido.cantidad;
@@ -363,9 +348,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                     });
                 });
             }
-
         });
-
     });
 });
 
@@ -408,8 +391,6 @@ app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
         });
     });
 
-
-
     Pedido.findByIdAndRemove(id, (err, pedidoBorrado) => {
         if (err) {
             return res.status(400).json({
@@ -418,7 +399,6 @@ app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 errors: err,
             });
         }
-
         if (!pedidoBorrado) {
             return res.status(400).json({
                 ok: false,
@@ -426,7 +406,6 @@ app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
                 errors: { message: "No existe un pedido con este ID" },
             });
         }
-
         res.status(200).json({
             ok: true,
             pedido: pedidoBorrado,

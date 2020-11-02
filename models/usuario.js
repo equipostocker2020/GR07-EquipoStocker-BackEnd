@@ -40,6 +40,7 @@ var usuarioSchema = new Schema({
         default: "ADMIN_ROLE",
         enum: rolesValidos,
     },
+    usuario: { type: String, required: false },
 });
 
 // validando path
