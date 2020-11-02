@@ -130,6 +130,14 @@ app.post("/", mdAutenticacion.verificaToken,(req, res) => {
             });
         }
 
+        if(body.cantidad <= 0){
+            return res.status(400).json({
+                ok: false,
+                mensaje: "La cantidad " + body.cantidad + " es menor o igual a 0",
+                errors: { message: "No existe un pedido con este ID" },
+            });
+        }
+
         
         let idUnico = uuidv4();
         var numero_pedido = "P-" + idUnico;
@@ -204,6 +212,14 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
                         });
                     });
            
+        }
+
+        if(body.cantidad <= 0){
+            return res.status(400).json({
+                ok: false,
+                mensaje: "La cantidad " + body.cantidad + " es menor o igual a 0",
+                errors: { message: "No existe un pedido con este ID" },
+            });
         }
 
         Producto.findById(pedido.producto, (err, producto) => {
