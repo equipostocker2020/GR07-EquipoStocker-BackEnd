@@ -1,3 +1,7 @@
+var express = require("express");
+var app = express();
+
+
 //json web token
 var jwt = require("jsonwebtoken");
 
@@ -40,7 +44,7 @@ const getUsuarios = (req, res) => {
 }
 
 const addUsuarios = (req, res) => {
- // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
+    // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postman. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
     var body = req.body;
     Usuario.find({})
@@ -99,4 +103,8 @@ const addUsuarios = (req, res) => {
         });
 }
 
-module.exports = { getUsuarios, addUsuarios }
+
+
+module.exports = { getUsuarios, addUsuarios };
+
+// module.exports = app;
