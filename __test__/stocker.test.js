@@ -1,11 +1,6 @@
 const request = require("supertest");
 const { app } = require("../app");
 var assert = require('assert');
-var mdAutenticacion = require("../middlewares/autenticacion");
-const proveedor = require("../models/proveedor");
-const cliente = require("../models/cliente");
-
-// var token = req.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvbGUiOiJVU0VSX1JPTEUiLCJfaWQiOiI1ZjI5ZTFmNDdjZTZlYzc1NDVkYmU1OTIiLCJub21icmUiOiJNYXJjZWxvIiwiYXBlbGxpZG8iOiJHdXRpZXJyZXoiLCJlbXByZXNhIjoiU2FyYXNhIiwiZGlyZWNjaW9uIjoicmVtczMwMjkiLCJjdWl0IjoiMTIzMTMyNDU2NDg5Nzk3IiwiZG5pIjoiMTIzNDU2Nzg5OTg3IiwidGVsZWZvbm8iOiIxMjM0NTY3ODkiLCJlbWFpbCI6Im1hcmNlbG9AbWFyY2Vsby5jb20iLCJwYXNzd29yZCI6Ij0pIiwiX192IjowLCJpbWciOiIzYTJkZjg2OS02YzQ5LTRhZDUtYWRkMC1mYTEyN2MzNzYxNzYuanBlZyJ9LCJpYXQiOjE1OTg0NjgyNDEsImV4cCI6MTU5ODQ4MjY0MX0";
 
 /*
  * Test login.
