@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *  name: Cliente
+ *  description: Endpoint para el manejo de los clientes
+ */
+
 //requires
 var express = require("express");
 var app = express();
@@ -11,7 +18,43 @@ var Cliente = require("../models/cliente");
 //middleware
 var mdAutenticacion = require("../middlewares/autenticacion");
 
-// obtener clientes...
+/**
+ * @swagger
+ * /cliente?desde={desde}:
+ *  get:
+ *      summary: Retorna la lista de clientes, cantidad maxima 15
+ *      tags: [Cliente]
+ *      parameters:
+ *          -   in: query
+ *              name: desde
+ *              schema:
+ *                  type: number
+ *              description: Numero desde donde empieza la paginacion
+ *      responses:
+ *          200:
+ *              description: Lista de clientes
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  clientes:                         
+ *                                      type: array
+ *                                      items:
+ *                                          $ref: '#/components/schemas/Cliente'
+ *                                  usuario_modifica:
+ *                                      $ref: '#/components/schemas/Cliente'
+ *                                  total:                         
+ *                                      type: number
+ *          500:
+ *              description: Error cargando clientes
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.get("/", (req, res) => {
     // enumerando
     var desde = req.query.desde || 0;
@@ -41,7 +84,39 @@ app.get("/", (req, res) => {
         });
 });
 
-// crear cliente
+/**
+ * @swagger
+ * /cliente:
+ *  post:
+ *      summary: Se crea un cliente
+ *      tags: [Cliente]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Cliente'
+ *      responses:
+ *          201:
+ *              description: Cliente creado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              ok:
+ *                                  type: boolean
+ *                              cliente:
+ *                                  $ref: '#/components/schemas/Cliente'
+ *                              clienteToken:
+ *                                  type: string
+ *          400:
+ *              description: Error al crear usuario
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postan. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
@@ -80,7 +155,49 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-//actualizar cliente
+/**
+ * @swagger
+ * /cliente/{id}:
+ *  put:
+ *      summary: Se modifica un cliente
+ *      tags: [Cliente]
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *                  type: string
+ *              required: true
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Cliente'
+ *      responses:
+ *          200:
+ *              description: Cliente modificado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              ok:
+ *                                  type: boolean
+ *                              cliente:
+ *                                  $ref: '#/components/schemas/Cliente'
+ *          400:
+ *              description: Error al actualizar cliente
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Error'
+ *          500:
+ *              description: Error al actualizar cliente
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -130,7 +247,44 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-// eliminar cliente
+/**
+ * @swagger
+ * /cliente/{id}:
+ *  delete:
+ *      summary: Se elimina un cliente
+ *      tags: [Cliente]
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *                  type: string
+ *              required: true
+ *              description: Id del cliente
+ *      responses:
+ *          200:
+ *              description: Cliente eliminado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              ok:
+ *                                  type: boolean
+ *                              cliente:
+ *                                  $ref: '#/components/schemas/Cliente'
+ *          400:
+ *              description: El cliente no existe
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Error'
+ *          500:
+ *              description: Error al borrar al cliente
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Cliente.findByIdAndRemove(id, (err, clienteBorrado) => {

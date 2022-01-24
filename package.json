@@ -21,6 +21,8 @@
         "nodemon": "^2.0.3",
         "react-scripts": "^3.4.0",
         "serve-index": "^1.9.1",
+        "swagger-jsdoc": "^6.1.0",
+        "swagger-ui-express": "^4.3.0",
         "typescript": "^3.8.3"
     }
 }

@@ -2,6 +2,7 @@
 var express = require("express");
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
+var swaggerUi = require("swagger-ui-express");
 
 //importar rutas
 var usuarioRoutes = require("./routes/usuario");
@@ -14,6 +15,7 @@ var busquedaRoutes = require("./routes/busqueda");
 var uploadRoutes = require("./routes/upload");
 var imagenesRoutes = require("./routes/imagenes");
 var sendEmail = require("./routes/sendEmail")
+var { swaggerDocs } = require("./config/swaggerConfig");
 
 //inicializando
 var app = express();
@@ -51,6 +53,7 @@ app.use("/busqueda", busquedaRoutes);
 app.use("/img", imagenesRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/send-email", sendEmail);
+app.use("/v2/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // escuchando peticiones
 app.listen(3000, () => {

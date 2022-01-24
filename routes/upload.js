@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *  name: Upload
+ *  description: Endpoint para el consumo de imagenes
+ */
+
 //requires
 var express = require("express");
 const fileUpload = require("express-fileupload");
@@ -15,9 +22,50 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 //contexto de fileUpload
 app.use(fileUpload());
 
-//para actualizar una foto se envia un put . Se envia como params el tipo de coleccion
-// y el id valido.
+/**
+ * @swagger
+ * /upload/{tipo}/{id}:
+ *  put:
+ *      summary: Se actualiza imagen de la coleccion indicada
+ *      tags: [Upload]
+ *      parameters:
+ *          -   in: path
+ *              name: tipo
+ *              schema:
+ *                  type: string
+ *                  enum: ["productos", "usuarios", "clientes", "proveedores"]
+ *              required: true
+ *              description: Coleccion correspondiente a la imagen
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *                  type: string
+ *              required: true
+ *              description: Id de la imagen enviada
+ *      responses:
+ *          200:
+ *              description: Imagen actualizada
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  msg:                         
+ *                                      type: string
+ *                                  nombreArchivo:
+ *                                      type: string
+ *          400:
+ *              description: Error al actualizar la imagen
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.put("/:tipo/:id", (req, res) => {
+    //para actualizar una foto se envia un put . Se envia como params el tipo de coleccion
+    // y el id valido.
     var tipo = req.params.tipo;
     var id = req.params.id;
     var tiposValidos = ["productos", "usuarios", "clientes", "proveedores"];
@@ -139,7 +187,38 @@ actualizarImagen = async(tipo, id, nombreArchivo) => {
             break;
     }
 };
-// se trae la imagen segun tipo de coleccion.
+
+/**
+ * @swagger
+ * /upload/{tipo}/{foto}:
+ *  get:
+ *      summary: Retorna la imagen indicada
+ *      tags: [Upload]
+ *      parameters:
+ *          -   in: path
+ *              name: tipo
+ *              schema:
+ *                  type: string
+ *              required: true
+ *              description: Tipo de imagen
+ *          -   in: path
+ *              name: foto
+ *              schema:
+ *                  type: string
+ *              required: true
+ *              description: Id de la imagen
+ *      responses:
+ *          200:
+ *              description: Retorna la imagen
+ *              content:
+ *                  image/png:
+ *                      schema:
+ *                          items:
+ *                              type: string
+ *                              format: binary
+ *          500:
+ *              description: Error al encontrar la imagen
+ */
 app.get("/:tipo/:foto", (req, res) => {
     const tipo = req.params.tipo;
     const foto = req.params.foto;

@@ -1,7 +1,26 @@
+/**
+ * @swagger
+ * tags:
+ *  name: Email
+ *  description: Endpoint de alerta por email generacion de usuario.
+ */
+
 var nodemailer = require('nodemailer');
 var express = require('express');
 var app = express();
 
+/**
+ * @swagger
+ * /send-email:
+ *  post:
+ *      summary: Genera el envio de email automaticamente
+ *      tags: [Email]
+ *      responses:
+ *          200:
+ *              description: Email enviado de forma correcta
+ *          500:
+ *              description: Error enviando el email
+ */
 app.post('/', (req, res) => {
     var trasnporter = nodemailer.createTransport({
         service: 'gmail',

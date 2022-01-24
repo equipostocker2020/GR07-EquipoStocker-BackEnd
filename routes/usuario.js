@@ -1,3 +1,10 @@
+/**
+ * @swagger
+ * tags:
+ *  name: Usuario
+ *  description: Endpoint para el manejo de los usuarios
+ */
+
 //requires
 var express = require("express");
 var app = express();
@@ -14,97 +21,123 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 // falta encriptar contraseña.
 var bcrypt = require("bcryptjs");
 
-// obtener usuarios...
-app.get("/", (req, res) => {
-    // enumerando
-    var desde = req.query.desde || 0;
-    // busca y mapea los atributos marcados
-    Usuario.find({},
-            "nombre apellido empresa email img role password cuit dni direccion telefono usuario")
-        .skip(desde)
-        .limit(15)
+const { getUsuarios, addUsuarios } = require('../controller/usuario');
 
-    // ejecuta, puede tener un error manejado.
-    .exec((err, usuarios) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: "Error cargando usuarios",
-                errors: err,
-            });
-        }
-        // metodo count donde va contando usuarios simplemente muestra un int que se incrementa con cada nuevo registro
-        Usuario.count({}, (err, conteo) => {
-            res.status(200).json({
-                ok: true,
-                usuarios: usuarios,
-                total: conteo,
-            });
-        });
-    });
-});
-// método para crear usuario
-app.post("/", (req, res) => {
-    // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
-    // esto se setea en postman. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
-    var body = req.body;
-    Usuario.find({})
-        .exec((err, usuarios) => {
+/**
+ * @swagger
+ * /usuario?desde={desde}:
+ *  get:
+ *      summary: Retorna la lista de usuarios
+ *      tags: [Usuario]
+ *      parameters:
+ *          -   in: query
+ *              name: desde
+ *              schema:
+ *                  type: number
+ *              description: Numero desde donde empieza la paginacion
+ *      responses:
+ *          200:
+ *              description: Lista de usuarios
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  usuarios:                         
+ *                                      type: array
+ *                                      items:
+ *                                          $ref: '#/components/schemas/Usuario'
+ *                                  total:                         
+ *                                      type: number
+ *          500:
+ *              description: Error cargando los usuarios
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
+app.get("/", getUsuarios);
 
-            if (usuarios.length == 0) {
+/**
+ * @swagger
+ * /usuario:
+ *  post:
+ *      summary: Se crea un usuario
+ *      tags: [Usuario]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Usuario'
+ *      responses:
+ *          201:
+ *              description: Usuario creado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  usuarios:                         
+ *                                      $ref: '#/components/schemas/Usuario'
+ *                                  usuarioToken:                         
+ *                                      type: string
+ *          400:
+ *              description: Error al crear el usuario
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
+app.post("/", addUsuarios);
 
-                var usuario = new Usuario({
-                    nombre: body.nombre,
-                    apellido: body.apellido,
-                    empresa: body.empresa,
-                    img: body.img,
-                    direccion: body.direccion,
-                    cuit: body.cuit,
-                    dni: body.dni,
-                    telefono: body.telefono,
-                    role: "ADMIN_ROLE",
-                    email: body.email,
-                    password: bcrypt.hashSync(body.password, 10),
-                    usuario: body.email,
-                });
-            } else {
-                var usuario = new Usuario({
-                    nombre: body.nombre,
-                    apellido: body.apellido,
-                    empresa: body.empresa,
-                    img: body.img,
-                    direccion: body.direccion,
-                    cuit: body.cuit,
-                    dni: body.dni,
-                    telefono: body.telefono,
-                    role: "USER_ROLE",
-                    email: body.email,
-                    password: bcrypt.hashSync(body.password, 10),
-                    usuario: body.email,
-                });
-            }
-            // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
-
-            usuario.save((err, usuarioGuardado) => {
-                // si hay un error....
-                if (err) {
-                    return res.status(400).json({
-                        ok: false,
-                        mensaje: "Error al crear usuario",
-                        errors: err,
-                    });
-                }
-                // si pasa ok ...
-                res.status(201).json({
-                    ok: true,
-                    usuario: usuarioGuardado,
-                    usuarioToken: req.usuario,
-                });
-            });
-        });
-});
-
-//actualizar usuario
+/**
+ * @swagger
+ * /usuario/{id}:
+ *  put:
+ *      summary: Se modifica un usuario
+ *      tags: [Usuario]
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *                  type: string
+ *              required: true
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Usuario'
+ *      responses:
+ *          200:
+ *              description: Usuario modificado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  usuario:                         
+ *                                      $ref: '#/components/schemas/Usuario'
+ *          400:
+ *              description: Error al buscar el usuario
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ *          500:
+ *              description: Error al actualizar el usuario
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -153,7 +186,44 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-// elimina un usuario especifico.
+/**
+ * @swagger
+ * /usuario/{id}:
+ *  delete:
+ *      summary: Se elimina un usuario
+ *      tags: [Usuario]
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *                  type: string
+ *              required: true
+ *              description: Id del usuario
+ *      responses:
+ *          200:
+ *              description: Usuario eliminado
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                                  ok:
+ *                                      type: boolean
+ *                                  usuario:                         
+ *                                      $ref: '#/components/schemas/Usuario'
+ *          400:
+ *              description: No existe un usuario con este ID
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ *          500:
+ *              description: Error al eliminar al usuario
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Errors'
+ */
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
