@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { app } = require("../app");
+const app = require("../app.js");
 var assert = require('assert');
 
 /*
@@ -61,9 +61,9 @@ describe("POST /cliente", () => {
             })
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
-            .expect(400);
+            .expect(401);
 
-        assert.equal(response.body.mensaje, "Error al crear usuario");
+        assert.equal(response.body.mensaje, "Token");
         assert.equal(response.body.ok, false);
     });
 });
@@ -321,9 +321,9 @@ describe("POST /cliente", () => {
             .post("/cliente")
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
-            .expect(400);
+            .expect(401);
 
-        assert.equal(response.body.mensaje, "Error al crear usuario");
+        assert.equal(response.body.mensaje, "Token");
         assert.equal(response.body.ok, false);
     });
 });
@@ -501,25 +501,25 @@ describe("GET /coleccion/:tabla/:busqueda", () => {
     });
 });
 
-/*
-GET Imagen.
-*/
+// /*
+// GET Imagen.
+// */
 
-describe("GET /:tipo/:img", () => {
-    test("Obtiene una imagen especifica, en este caso de la coleccion proveedor.", async() => {
-        const response = await request(app)
-            .get("/upload/proveedores/8600c6f4-7b36-4e48-b7ea-27f3b41f163f.jpeg")
-            .set("Accept", "application/json")
-            .expect("Content-Type", "image/jpeg")
-            .expect(200);
+// describe("GET /:tipo/:img", () => {
+//     test("Obtiene una imagen especifica, en este caso de la coleccion proveedor.", async() => {
+//         const response = await request(app)
+//             .get("/upload/proveedores/8600c6f4-7b36-4e48-b7ea-27f3b41f163f.jpeg")
+//             .set("Accept", "application/json")
+//             .expect("Content-Type", "image/jpeg")
+//             .expect(200);
 
-        assert.equal(response.body.offset, 0);
-    });
-});
+//         assert.equal(response.body.offset, 0);
+//     });
+// });
 
-/*
-PUT Imagen.
-*/
+// /*
+// PUT Imagen.
+// */
 
 describe("PUT /:tipo/:id", () => {
     test("Actualiza la imagen de un registro. En este caso un proveedor. Devuelve Bad Request al no agregar un archivo al como form-data", async() => {

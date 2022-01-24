@@ -62,3 +62,4 @@ app.listen(3000, () => {
         " Stocker online"
     );
 });
+module.exports = app;
