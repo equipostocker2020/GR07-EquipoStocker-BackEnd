@@ -1,0 +1,44 @@
+# LOGIN
+/login:
+  post:
+    summary: Validacion de credenciales ingresadas por el usuario
+    tags: [Autenticacion]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+    responses:
+      201:
+        description: Pedido creado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                usuario:
+                  $ref: "#/components/schemas/Usuario"
+                token:
+                  type: string
+                id:
+                  type: string
+      400:
+        description: Credenciales invalidas
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+      500:
+        description: Error en la busqueda del usuario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"

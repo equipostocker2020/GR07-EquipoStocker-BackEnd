@@ -1,10 +1,3 @@
-/**
- * @swagger
- * tags:
- *  name: Pedido
- *  description: Endpoint para el ingreso de pedidos
- */
-
 var express = require("express");
 var app = express();
 var Pedido = require("../models/pedido");
@@ -14,49 +7,6 @@ var Producto = require("../models/producto");
 var Usuario = require("../models/usuario");
 const uuidv4 = require("uuid/v4");
 
-/**
- * @swagger
- * /pedido?desde={desde}:
- *  get:
- *      summary: Retorna la lista de pedidos
- *      tags: [Pedido]
- *      parameters:
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de pedidos, maximo 15
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              pedidos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Pedido'
- *                              clientes:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Cliente'
- *                              productos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Producto'
- *                              total:
- *                                  type: number
- *          500:
- *              description: Error cargando pedidos
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
@@ -87,45 +37,6 @@ app.get("/", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /pedido/{id}?desde={desde}:
- *  get:
- *      summary: Retorna el pedido seleccionado
- *      tags: [Pedido]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del pedido
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de pedidos
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              pedido:
- *                                  $ref: '#/components/schemas/Pedido'
- *                              total:
- *                                  type: number
- *          400:
- *              description: Error al buscar pedido
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/:id", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
@@ -156,55 +67,6 @@ app.get("/:id", (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /pedido/cliente/{id}?desde={desde}:
- *  get:
- *      summary: Retorna el pedido seleccionado por el cliente
- *      tags: [Pedido]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del cliente
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de clientes
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              pedidos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Pedido'
- *                              clientes:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Cliente'
- *                              productos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Producto'
- *                              total:
- *                                  type: number
- *          500:
- *              description: Error cargando clientes
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/cliente/:id", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
@@ -241,37 +103,6 @@ app.get("/cliente/:id", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /pedido:
- *  post:
- *      summary: Se crea un pedido
- *      tags: [Pedido]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Pedido'
- *      responses:
- *          200:
- *              description: Pedido creado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  pedido:
- *                                      $ref: '#/components/schemas/Pedido'
- *          400:
- *              description: Error al crear el pedido
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Error'
- */
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     var body = req.body;
     var resta_producto = 0;
@@ -340,43 +171,6 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /pedido/{id}:
- *  put:
- *      summary: Se modifica un pedido
- *      tags: [Pedido]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Pedido'
- *      responses:
- *          200:
- *              description: Pedido modificado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  pedido:
- *                                      $ref: '#/components/schemas/Pedido'
- *          400:
- *              description: Error al actualizar el pedido
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -558,38 +352,6 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /pedido/{id}:
- *  delete:
- *      summary: Se elimina un pedido
- *      tags: [Pedido]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del pedido a eliminar
- *      responses:
- *          200:
- *              description: Pedido eliminado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  pedido:
- *                                      $ref: '#/components/schemas/Pedido'
- *          400:
- *              description: Error al eliminar el pedido
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
 

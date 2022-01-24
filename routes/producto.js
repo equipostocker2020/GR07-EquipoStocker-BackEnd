@@ -1,55 +1,9 @@
-/**
- * @swagger
- * tags:
- *  name: Producto
- *  description: Endpoint para el manejo de los productos
- */
-
 // requires
 var express = require("express");
 var app = express();
 var Producto = require("../models/producto");
 var mdAutenticacion = require("../middlewares/autenticacion");
 
-/**
- * @swagger
- * /producto?desde={desde}:
- *  get:
- *      summary: Retorna la lista de productos
- *      tags: [Producto]
- *      parameters:
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de productos
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              productos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Producto'
- *                              proveedor:
- *                                  $ref: '#/components/schemas/Proveedor'
- *                              usuario:
- *                                  $ref: '#/components/schemas/Usuario'
- *                              total:
- *                                  type: number
- *          500:
- *              description: Error cargando productos
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;
     desde = Number(desde);
@@ -79,51 +33,6 @@ app.get("/", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /producto/{id}?desde={desde}:
- *  get:
- *      summary: Retorna el producto seleccionado
- *      tags: [Producto]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del producto
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de productos
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              productos:
- *                                  type: array
- *                                  items:
- *                                      $ref: '#/components/schemas/Producto'
- *                              proveedor:
- *                                  $ref: '#/components/schemas/Proveedor'
- *                              usuario:
- *                                  $ref: '#/components/schemas/Usuario'
- *                              total:
- *                                  type: number
- *          500:
- *              description: Error al buscar el producto
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/:id", (req, res) => {
     var desde = req.params.desde || 0;
     var id = req.params.id;
@@ -154,39 +63,6 @@ app.get("/:id", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /producto:
- *  post:
- *      summary: Se crea un producto
- *      tags: [Producto]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Producto'
- *      responses:
- *          201:
- *              description: Producto creado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  producto:
- *                                      $ref: '#/components/schemas/Cliente'
- *                                  productoToken:                         
- *                                      type: string
- *          400:
- *              description: Error al crear el producto
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     var body = req.body;
 
@@ -216,43 +92,6 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /producto/{id}:
- *  put:
- *      summary: Se modifica un producto
- *      tags: [Producto]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Producto'
- *      responses:
- *          200:
- *              description: Producto modificado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  producto:
- *                                      $ref: '#/components/schemas/Cliente'
- *          400:
- *              description: Error al actualizar el producto
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -297,38 +136,6 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /producto/{id}:
- *  delete:
- *      summary: Se elimina un producto
- *      tags: [Producto]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del Producto a eliminar
- *      responses:
- *          200:
- *              description: Pedido eliminado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  producto:
- *                                      $ref: '#/components/schemas/Cliente'
- *          400:
- *              description: Error al eliminar el producto
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Producto.findByIdAndRemove(id, (err, productoBorrado) => {

@@ -1,10 +1,3 @@
-/**
- * @swagger
- * tags:
- *  name: Autenticacion
- *  description: Endpoint para autenticacion de usuarios
- */
-
 // requires
 var express = require('express');
 var app = express();
@@ -16,52 +9,6 @@ var Usuario = require('../models/usuario');
 // constantes
 var SEED = require('../config/config').SEED;
 
-/**
- * @swagger
- * /login:
- *  post:
- *      summary: Validacion de credenciales ingresadas por el usuario
- *      tags: [Autenticacion]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          email:
- *                              type: string
- *                          password:
- *                              type: string
- *      responses:
- *          201:
- *              description: Pedido creado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              ok:
- *                                  type: boolean
- *                              usuario:
- *                                  $ref: '#/components/schemas/Usuario'
- *                              token:
- *                                  type: string
- *                              id:
- *                                  type: string
- *          400:
- *              description: Credenciales invalidas
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- *          500:
- *              description: Error en la busqueda del usuario
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 //metodo para logearse donde valida mail (user) y pass. trae token cada vez que se envia.
 app.post('/', (req, res) => {
     var body = req.body;
@@ -108,4 +55,5 @@ app.post('/', (req, res) => {
 
     });
 });
+
 module.exports = app;

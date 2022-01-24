@@ -1,0 +1,218 @@
+# GET PEDIDO
+/pedido?desde={desde}:
+  get:
+    summary: Retorna la lista de pedidos
+    tags: [Pedido]
+    parameters:
+      - in: query
+        name: desde
+        schema:
+          type: number
+        description: Numero desde donde empieza la paginacion
+    responses:
+      200:
+        description: Lista de pedidos, maximo 15
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedidos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Pedido"
+                clientes:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Cliente"
+                productos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Producto"
+                total:
+                  type: number
+      500:
+        description: Error cargando pedidos
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+# GET POR ID
+/pedido/{id}?desde={desde}:
+  get:
+    summary: Retorna el pedido seleccionado
+    tags: [Pedido]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id del pedido
+      - in: query
+        name: desde
+        schema:
+          type: number
+        description: Numero desde donde empieza la paginacion
+    responses:
+      200:
+        description: Lista de pedidos
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedido:
+                  $ref: "#/components/schemas/Pedido"
+                total:
+                  type: number
+      400:
+        description: Error al buscar pedido
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+# GET PEDIDO POR CLIENTE
+/pedido/cliente/{id}?desde={desde}:
+  get:
+    summary: Retorna el pedido seleccionado por el cliente
+    tags: [Pedido]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id del cliente
+      - in: query
+        name: desde
+        schema:
+          type: number
+        description: Numero desde donde empieza la paginacion
+    responses:
+      200:
+        description: Lista de clientes
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedidos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Pedido"
+                clientes:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Cliente"
+                productos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Producto"
+                total:
+                  type: number
+      500:
+        description: Error cargando clientes
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+# ADD PEDIDO
+/pedido:
+  post:
+    summary: Se crea un pedido
+    tags: [Pedido]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Pedido"
+    responses:
+      200:
+        description: Pedido creado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedido:
+                  $ref: "#/components/schemas/Pedido"
+      400:
+        description: Error al crear el pedido
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Error"
+# MODIFICAR PEDIDO
+/pedido/{id}:
+  put:
+    summary: Se modifica un pedido
+    tags: [Pedido]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Pedido"
+    responses:
+      200:
+        description: Pedido modificado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedido:
+                  $ref: "#/components/schemas/Pedido"
+      400:
+        description: Error al actualizar el pedido
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+  # ELIMINAR PEDIDO
+  delete:
+    summary: Se elimina un pedido
+    tags: [Pedido]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id del pedido a eliminar
+    responses:
+      200:
+        description: Pedido eliminado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                pedido:
+                  $ref: "#/components/schemas/Pedido"
+      400:
+        description: Error al eliminar el pedido
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"

@@ -1,10 +1,3 @@
-/**
- * @swagger
- * tags:
- *  name: Proveedor
- *  description: Endpoint para el ingreso de pedidos
- */
-
 //requires
 var express = require("express");
 var app = express();
@@ -17,41 +10,6 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 // falta encriptar contraseña.
 var bcrypt = require("bcryptjs");
 
-/**
- * @swagger
- * /proveedor?desde={desde}:
- *  get:
- *      summary: Retorna la lista de proveedores
- *      tags: [Proveedor]
- *      parameters:
- *          -   in: query
- *              name: desde
- *              schema:
- *                  type: number
- *              description: Numero desde donde empieza la paginacion
- *      responses:
- *          200:
- *              description: Lista de proveedores
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  proveedor:                         
- *                                      $ref: '#/components/schemas/Proveedor'
- *                                  usuario:
- *                                      $ref: '#/components/schemas/Usuario'
- *                                  total:                         
- *                                      type: number
- *          500:
- *              description: Error cargando proveedores
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.get("/", (req, res) => {
     // enumerando
     var desde = req.query.desde || 0;
@@ -81,39 +39,6 @@ app.get("/", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /proveedor:
- *  post:
- *      summary: Se crea un proveedor
- *      tags: [Proveedor]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Proveedor'
- *      responses:
- *          201:
- *              description: Prooverdor creado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  proveedor:                         
- *                                      $ref: '#/components/schemas/Proveedor'
- *                                  proveedorToken:                         
- *                                      type: string
- *          400:
- *              description: Error al crear el Prooverdor
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postam. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
@@ -150,49 +75,6 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /proveedor/{id}:
- *  put:
- *      summary: Se modifica un proveedor
- *      tags: [Proveedor]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#/components/schemas/Proveedor'
- *      responses:
- *          200:
- *              description: Proveedor modificado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  proveedor:                         
- *                                      $ref: '#/components/schemas/Proveedor'
- *          400:
- *              description: Error al actualizar el proveedor
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- *          500:
- *              description: Error al actualizar el proveedor
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
@@ -241,44 +123,6 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /proveedor/{id}:
- *  delete:
- *      summary: Se elimina un proveedor
- *      tags: [Proveedor]
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: Id del proveedor a eliminar
- *      responses:
- *          200:
- *              description: Proveedor eliminado
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  ok:
- *                                      type: boolean
- *                                  proveedor:                         
- *                                      $ref: '#/components/schemas/Proveedor'
- *          400:
- *              description: No existe un proveedor con ese id
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- *          500:
- *              description: Error al eliminar el Proveedor
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Errors'
- */
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     Proveedor.findByIdAndRemove(id, (err, proveedorBorrado) => {

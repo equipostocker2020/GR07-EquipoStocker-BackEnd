@@ -1,10 +1,3 @@
-/**
- * @swagger
- * tags:
- *  name: Busqueda
- *  description: Endpoint para el ingreso de pedidos
- */
-
 // requires
 var express = require("express");
 var app = express();
@@ -14,47 +7,6 @@ var Proveedor = require("../models/proveedor");
 var Cliente = require("../models/cliente");
 var Pedido = require("../models/pedido");
 
-/**
- * @swagger
- * /coleccion/{tabla}/{busqueda}:
- *  get:
- *      summary: Busqueda por coleccion
- *      tags: [Busqueda]
- *      parameters:
- *          -   in: path
- *              name: tabla
- *              schema:
- *                  type: string
- *                  enum: ["usuarios", "productos", "proveedor", "cliente", "pedido"]
- *              required: true
- *              description: Coleccion a buscar
- *          -   in: path
- *              name: busqueda
- *              schema:
- *                  type: string
- *              required: true
- *              description: busqueda enviada
- *      responses:
- *          200:
- *              description: Tipo de objeto que se puede generar dependiendo de la consulta
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: array
- *                          items:
- *                              oneOf:
- *                                  -   $ref: '#/components/schemas/Usuario'
- *                                  -   $ref: '#/components/schemas/Producto'
- *                                  -   $ref: '#/components/schemas/Proveedor'
- *                                  -   $ref: '#/components/schemas/Cliente'
- *                                  -   $ref: '#/components/schemas/Pedido'
- *          400:
- *              description: Error en la busqueda
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Error'
- */
 app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
     var busqueda = req.params.busqueda;
     var tabla = req.params.tabla;
@@ -94,48 +46,6 @@ app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
     });
 });
 
-/**
- * @swagger
- * /todo/{busqueda}:
- *  get:
- *      summary: Busqueda general
- *      tags: [Busqueda]
- *      parameters:
- *          -   in: path
- *              name: busqueda
- *              schema:
- *                  type: string
- *              required: true
- *              description: Coleccion a buscar
- *      responses:
- *          200:
- *              description: Tipo de objeto que se puede generar dependiendo de la consulta
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: array
- *                          items:
- *                              type: object
- *                              properties:
- *                                  ok:
- *                                      type: boolean
- *                                  usuarios:
- *                                      $ref: '#/components/schemas/Usuario'
- *                                  productos:
- *                                      $ref: '#/components/schemas/Producto'
- *                                  proveedores:
- *                                      $ref: '#/components/schemas/Proveedor'
- *                                  cliente:
- *                                      $ref: '#/components/schemas/Cliente'
- *                                  pedido:
- *                                      $ref: '#/components/schemas/Pedido'
- *          400:
- *              description: Error en la busqueda
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Error'
- */
 app.get("/todo/:busqueda", (req, res, next) => {
     var busqueda = req.params.busqueda;
     var regex = new RegExp(busqueda, "i");

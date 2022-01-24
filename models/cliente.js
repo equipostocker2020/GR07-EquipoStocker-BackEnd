@@ -10,43 +10,6 @@ var estados = {
     message: "{VALUE} no es un estado permitido",
 };
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Cliente:
- *          type: object
- *          required:
- *              - nombre
- *              - apellido
- *              - email
- *              - cuit
- *              - dni
- *              - estado
- *          properties:
- *              nombre:
- *                  type: string
- *              apellido:
- *                  type: string
- *              email:
- *                  type: string
- *              direccion:
- *                  type: string
- *              cuit:
- *                  type: string
- *              telefono:
- *                  type: string
- *              dni:
- *                  type: string
- *              usuario:
- *                  $ref: '#/components/schemas/Usuario'
- *              img:
- *                  type: string
- *              estado:
- *                  type: string
- *                  enum: ["ACTIVO", "INACTIVO"]
- *                  default: "ACTIVO"
- */
 // generando campos al schema
 var clienteSchema = new Schema({
     nombre: { type: String, required: [true, "El nombre es necesario"] },

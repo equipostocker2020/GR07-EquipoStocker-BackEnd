@@ -5,40 +5,6 @@ var uniqueValidator = require('mongoose-unique-validator');
 // importando esquema
 var Schema = mongoose.Schema;
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Proveedor:
- *          type: object
- *          required:
- *              - nombre
- *              - email
- *              - cuit
- *              - situacion_afip
- *              - estado
- *          properties:
- *              nombre:
- *                  type: string
- *              direccion:
- *                  type: string
- *              cuit:
- *                  type: string
- *              email:
- *                  type: string
- *              telefono:
- *                  type: string
- *              situacion_afip:
- *                  type: string
- *              estado:
- *                  type: string
- *                  enum: ["ACTIVO", "INACTIVO"]
- *                  default: "ACTIVO"
- *              usuario:
- *                  $ref: '#/components/schemas/Usuario'
- *              img:
- *                  type: string
- */
 var estados = {
     values: ["ACTIVO", "INACTIVO"],
     message: "{VALUE} no es un estado permitido",

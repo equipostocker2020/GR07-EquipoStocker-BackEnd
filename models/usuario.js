@@ -5,50 +5,6 @@ var uniqueValidator = require("mongoose-unique-validator");
 // importando esquema
 var Schema = mongoose.Schema;
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Usuario:
- *          type: object
- *          required:
- *              - nombre
- *              - apellido
- *              - empresa
- *              - email
- *              - password
- *              - cuit
- *              - dni
- *              - estado
- *              - role
- *          properties:
- *              nombre:
- *                  type: string
- *              apellido:
- *                  type: string
- *              empresa:
- *                  type: string
- *              email:
- *                  type: string
- *              password:
- *                  type: string
- *              direccion:
- *                  type: string
- *              cuit:
- *                  type: string
- *              telefono:
- *                  type: string
- *              dni:
- *                  type: string
- *              img:
- *                  type: string
- *              role:
- *                  type: string
- *                  enum: ["ADMIN_ROLE", "USER_ROLE", "SALES_ROLE", "DEPOSIT_ROLE"]
- *                  default: "ADMIN_ROLE"
- *              usuario:
- *                  type: string
- */
 var rolesValidos = {
     values: ["ADMIN_ROLE", "USER_ROLE", "SALES_ROLE", "DEPOSIT_ROLE"],
     message: "{VALUE} no es un rol permitido ",

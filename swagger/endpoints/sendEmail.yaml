@@ -1,0 +1,10 @@
+# SEND EMAIL
+/send-email:
+  post:
+    summary: Genera el envio de email automaticamente
+    tags: [Email]
+    responses:
+      200:
+        description: Email enviado de forma correcta
+      500:
+        description: Error enviando el email

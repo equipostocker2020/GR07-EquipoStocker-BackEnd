@@ -1,0 +1,140 @@
+# GET PROVEEDORES
+/proveedor?desde={desde}:
+  get:
+    summary: Retorna la lista de proveedores
+    tags: [Proveedor]
+    parameters:
+      - in: query
+        name: desde
+        schema:
+          type: number
+        description: Numero desde donde empieza la paginacion
+    responses:
+      200:
+        description: Lista de proveedores
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                proveedor:
+                  $ref: "#/components/schemas/Proveedor"
+                usuario:
+                  $ref: "#/components/schemas/Usuario"
+                total:
+                  type: number
+      500:
+        description: Error cargando proveedores
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+# ADD PROVEEDOR
+/proveedor:
+  post:
+    summary: Se crea un proveedor
+    tags: [Proveedor]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Proveedor"
+    responses:
+      201:
+        description: Prooverdor creado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                proveedor:
+                  $ref: "#/components/schemas/Proveedor"
+                proveedorToken:
+                  type: string
+      400:
+        description: Error al crear el Prooverdor
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+# EDIT PROVEEDOR
+/proveedor/{id}:
+  put:
+    summary: Se modifica un proveedor
+    tags: [Proveedor]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Proveedor"
+    responses:
+      200:
+        description: Proveedor modificado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                proveedor:
+                  $ref: "#/components/schemas/Proveedor"
+      400:
+        description: Error al actualizar el proveedor
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+      500:
+        description: Error al actualizar el proveedor
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+  # DELETE PROVEEDOR
+  delete:
+    summary: Se elimina un proveedor
+    tags: [Proveedor]
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: Id del proveedor a eliminar
+    responses:
+      200:
+        description: Proveedor eliminado
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ok:
+                  type: boolean
+                proveedor:
+                  $ref: "#/components/schemas/Proveedor"
+      400:
+        description: No existe un proveedor con ese id
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"
+      500:
+        description: Error al eliminar el Proveedor
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Errors"

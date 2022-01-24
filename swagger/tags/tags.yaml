@@ -1,0 +1,19 @@
+tags:
+- name: Usuario
+  description: Endpoint para el manejo de los usuarios
+- name: Upload
+  description: Endpoint para el consumo de imagenes
+- name: Busqueda
+  description: Endpoint para el ingreso de pedidos
+- name: Cliente
+  description: Endpoint para el manejo de los clientes
+- name: Autenticacion
+  description: Endpoint para autenticacion de usuarios
+- name: Pedido
+  description: Endpoint para el ingreso de pedidos
+- name: Producto
+  description: Endpoint para el manejo de los productos
+- name: Proveedor
+  description: Endpoint para el ingreso de pedidos
+- name: Email
+  description: Endpoint de alerta por email generacion de usuario.

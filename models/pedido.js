@@ -3,32 +3,6 @@ var uniqueValidator = require("mongoose-unique-validator");
 
 var Schema = mongoose.Schema;
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Pedido:
- *          type: object
- *          required:
- *              - estado
- *          properties:
- *              cliente:
- *                  $ref: '#/components/schemas/Cliente'
- *              producto:
- *                  $ref: '#/components/schemas/Producto'
- *              cantidad:
- *                  type: number
- *              total:
- *                  type: number
- *              numero_pedido:
- *                  type: string
- *              usuario:
- *                  $ref: '#/components/schemas/Usuario'
- *              estado:
- *                  type: string
- *                  enum: ["enviado", "preparación", "cancelado"]
- *                  default: "preparación"
- */
 var estadoPedido = {
     values: ["enviado", "preparación", "cancelado"],
     message: "{VALUE} no es un estado permitido ",
