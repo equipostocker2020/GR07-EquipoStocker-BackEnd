@@ -1,25 +1,11 @@
-//requires
-var express = require("express");
-var app = express();
+let Cliente = require("../models/cliente");
 
-// //json web token
-var jwt = require("jsonwebtoken");
-
-//requiere modelo
-var Cliente = require("../models/cliente");
-
-//middleware
-var mdAutenticacion = require("../middlewares/autenticacion");
-
-const getClientes = app.get("/", (req, res) => {
-    // enumerando
-    var desde = req.query.desde || 0;
-    // busca y mapea los atributos marcados
+const getClientes = (req, res) =>{
+    let desde = req.query.desde || 0;
     Cliente.find({}, "nombre apellido email direccion cuit telefono dni img estado")
         .skip(desde)
         .limit(15)
         .populate("usuario", "email")
-        // ejecuta, puede tener un error manejado.
         .exec((err, clientes, usuario) => {
             if (err) {
                 return res.status(500).json({
@@ -28,7 +14,6 @@ const getClientes = app.get("/", (req, res) => {
                     errors: err,
                 });
             }
-            // metodo count donde va contando clientes simplemente muestra un int que se incrementa con cada nuevo registro
             Cliente.count({}, (err, conteo) => {
                 res.status(200).json({
                     ok: true,
@@ -38,15 +23,12 @@ const getClientes = app.get("/", (req, res) => {
                 });
             });
         });
-});
+}
 
-const addCliente = app.post("/", mdAutenticacion.verificaToken, (req, res) => {
-    // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
-    // esto se setea en postan. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
+const addCliente = (req, res) => {
+    let body = req.body;
 
-    var body = req.body;
-
-    var cliente = new Cliente({
+    let cliente = new Cliente({
         nombre: body.nombre,
         apellido: body.apellido,
         email: body.email,
@@ -59,9 +41,7 @@ const addCliente = app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         estado: body.estado,
     });
 
-    // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
     cliente.save((err, clienteGuardado) => {
-        // si hay un error....
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -69,18 +49,17 @@ const addCliente = app.post("/", mdAutenticacion.verificaToken, (req, res) => {
                 errors: err,
             });
         }
-        // si pasa ok ...
         res.status(201).json({
             ok: true,
             cliente: clienteGuardado,
             clienteToken: req.cliente,
         });
     });
-});
+}
 
-const updateClienteById = app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
-    var body = req.body;
+const updateClienteById = (req, res) => {
+    let id = req.params.id;
+    let body = req.body;
 
     Cliente.findById(id, (err, cliente) => {
         if (err) {
@@ -125,10 +104,10 @@ const updateClienteById = app.put("/:id", mdAutenticacion.verificaToken, (req, r
             });
         });
     });
-});
+}
 
-const deleteCliente = app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
+const deleteCliente = (req, res) => {
+    let id = req.params.id;
     Cliente.findByIdAndRemove(id, (err, clienteBorrado) => {
         if (err) {
             return res.status(500).json({
@@ -151,9 +130,6 @@ const deleteCliente = app.delete("/:id", mdAutenticacion.verificaToken, (req, re
             cliente: clienteBorrado,
         });
     });
-});
-
-//exportando modulo
-module.exports = app;
+}
 
 module.exports = { getClientes, addCliente, updateClienteById, deleteCliente };

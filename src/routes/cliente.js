@@ -1,9 +1,7 @@
-//requires
-var express = require("express");
-var app = express();
+let express = require("express");
+let app = express();
 
-//middleware
-var mdAutenticacion = require("../middlewares/autenticacion");
+let mdAutenticacion = require("../middlewares/autenticacion");
 
 const { getClientes, addCliente, updateClienteById, deleteCliente } = require('../controller/cliente.controller');
 
@@ -15,5 +13,4 @@ app.put("/:id", mdAutenticacion.verificaToken, updateClienteById);
 
 app.delete("/:id", mdAutenticacion.verificaToken, deleteCliente);
 
-//exportando modulo
 module.exports = app;
