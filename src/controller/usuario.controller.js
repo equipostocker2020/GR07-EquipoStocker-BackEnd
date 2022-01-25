@@ -38,7 +38,7 @@ const getUsuarios = (req, res) => {
             });
         });
     });
-}
+};
 
 const addUsuarios = (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
@@ -98,7 +98,7 @@ const addUsuarios = (req, res) => {
                 });
             });
         });
-}
+};
 
 const editUsuarios = (req, res) => {
     var id = req.params.id;
@@ -146,7 +146,7 @@ const editUsuarios = (req, res) => {
             });
         });
     });
-}
+};
 
 const deleteUsuarios = (req, res) => {
     var id = req.params.id;
@@ -172,6 +172,6 @@ const deleteUsuarios = (req, res) => {
             usuario: usuarioBorrado,
         });
     });
-}
+};
 
-module.exports = { getUsuarios, addUsuarios, editUsuarios, deleteUsuarios }
+module.exports = { getUsuarios, addUsuarios, editUsuarios, deleteUsuarios };

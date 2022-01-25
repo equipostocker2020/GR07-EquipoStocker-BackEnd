@@ -5,7 +5,7 @@ var app = express();
 //middleware
 var mdAutenticacion = require("../middlewares/autenticacion");
 
-const { getUsuarios, addUsuarios, editUsuarios, deleteUsuarios } = require('../controller/usuario');
+const { getUsuarios, addUsuarios, editUsuarios, deleteUsuarios } = require('../controller/usuario.controller');
 
 app.get("/", getUsuarios);
 
