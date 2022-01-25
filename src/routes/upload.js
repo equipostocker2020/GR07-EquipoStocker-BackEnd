@@ -53,7 +53,7 @@ app.put("/:tipo/:id", (req, res) => {
     // se convierte el nombre del archivo con la lib uuid
     const nombreArchivo = `${uuidv4()}.${extensionArchivo}`;
 
-    const path = `./uploads/${tipo}/${nombreArchivo}`;
+    const path = `./src/uploads/${tipo}/${nombreArchivo}`;
 
     file.mv(path, (error) => {
         if (error) {
