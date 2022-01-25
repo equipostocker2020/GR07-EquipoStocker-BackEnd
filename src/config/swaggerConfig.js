@@ -19,11 +19,9 @@ const swaggerOptions = {
         ]
     },
     apis: [
-        "./routes/*",
-        "./models/*",
-        "./swagger/schemas/*",
-        "./swagger/endpoints/*",
-        "./swagger/tags/*"
+        "./src/swagger/schemas/*",
+        "./src/swagger/endpoints/*",
+        "./src/swagger/tags/*"
     ]
 }
 

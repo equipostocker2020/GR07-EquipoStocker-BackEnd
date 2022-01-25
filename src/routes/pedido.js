@@ -5,7 +5,7 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 const Cliente = require("../models/cliente");
 var Producto = require("../models/producto");
 var Usuario = require("../models/usuario");
-const uuidv4 = require("uuid/v4");
+const uuidv4 = require("uuidv4");
 
 app.get("/", (req, res) => {
     var desde = req.params.desde || 0;

@@ -4,7 +4,7 @@
     "description": "backend stocker",
     "main": "app.js",
     "scripts": {
-        "start": "nodemon app.js",
+        "start": "nodemon src/app.js",
         "test": "jest",
         "lint": "eslint --ignore-path .gitignore .",
         "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|)\""
@@ -25,7 +25,8 @@
         "serve-index": "^1.9.1",
         "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.3.0",
-        "typescript": "^3.8.3"
+        "typescript": "^3.8.3",
+        "uuidv4": "^6.2.12"
     },
     "devDependencies": {
         "eslint": "^8.7.0",

@@ -1,6 +1,5 @@
 // requires
 var express = require("express");
-var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var swaggerUi = require("swagger-ui-express");
 
@@ -19,6 +18,7 @@ var { swaggerDocs } = require("./config/swaggerConfig");
 
 //inicializando
 var app = express();
+require("./config/database");
 
 // enconding, verbos y metodos soportados..
 app.use((req, res, next) => {
@@ -35,12 +35,6 @@ app.use((req, res, next) => {
 //parse application
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-// conexion a la BD.
-mongoose.connection.openUri("mongodb://localhost:27017/stocker", (err, res) => {
-    if (err) throw err;
-    console.log("Base de datos\x1b[32m%s\x1b[0m ", " Stocker online");
-});
 
 //rutas
 app.use("/login", loginRoutes);
@@ -62,4 +56,5 @@ app.listen(3000, () => {
         " Stocker online"
     );
 });
+
 module.exports = app;
