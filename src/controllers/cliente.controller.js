@@ -1,6 +1,6 @@
-let Cliente = require("../models/clienteModel");
+let Cliente = require("../models/cliente.model");
 
-const getClientes = (req, res) =>{
+const getClientes = (req, res) => {
     let desde = req.query.desde || 0;
     Cliente.find({}, "nombre apellido email direccion cuit telefono dni img estado")
         .skip(desde)
@@ -23,7 +23,7 @@ const getClientes = (req, res) =>{
                 });
             });
         });
-}
+};
 
 const addCliente = (req, res) => {
     let body = req.body;
@@ -55,7 +55,7 @@ const addCliente = (req, res) => {
             clienteToken: req.cliente,
         });
     });
-}
+};
 
 const updateClienteById = (req, res) => {
     let id = req.params.id;
@@ -104,7 +104,7 @@ const updateClienteById = (req, res) => {
             });
         });
     });
-}
+};
 
 const deleteCliente = (req, res) => {
     let id = req.params.id;
@@ -130,6 +130,6 @@ const deleteCliente = (req, res) => {
             cliente: clienteBorrado,
         });
     });
-}
+};
 
 module.exports = { getClientes, addCliente, updateClienteById, deleteCliente };

@@ -5,7 +5,7 @@ let app = express();
 let bcrypt = require('bcryptjs');
 //jwt
 let jwt = require('jsonwebtoken');
-let Usuario = require('../models/usuarioModel');
+let Usuario = require('../models/usuario.model');
 // constantes
 let SEED = require('../config/config').SEED;
 

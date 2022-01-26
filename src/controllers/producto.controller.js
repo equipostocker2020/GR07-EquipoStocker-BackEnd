@@ -1,4 +1,4 @@
-let Producto = require("../models/productoModel");
+let Producto = require("../models/producto.model");
 
 const getProducto = (req, res) => {
     let desde = req.params.desde || 0;
@@ -27,7 +27,7 @@ const getProducto = (req, res) => {
                 });
             });
         });
-}
+};
 
 const getProductoById = (req, res) => {
     let desde = req.params.desde || 0;
@@ -57,7 +57,7 @@ const getProductoById = (req, res) => {
                 });
             });
         });
-}
+};
 
 const addProducto = (req, res) => {
     let body = req.body;
@@ -86,7 +86,7 @@ const addProducto = (req, res) => {
             productoToken: req.producto,
         });
     });
-}
+};
 
 const updateProducto = (req, res) => {
     let id = req.params.id;
@@ -130,9 +130,9 @@ const updateProducto = (req, res) => {
             });
         });
     });
-}
+};
 
-const deleteProducto =  (req, res) => {
+const deleteProducto = (req, res) => {
     let id = req.params.id;
     Producto.findByIdAndRemove(id, (err, productoBorrado) => {
         if (err) {
@@ -156,6 +156,6 @@ const deleteProducto =  (req, res) => {
             producto: productoBorrado,
         });
     });
-}
+};
 
 module.exports = { getProducto, getProductoById, addProducto, updateProducto, deleteProducto };

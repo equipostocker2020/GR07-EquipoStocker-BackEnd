@@ -5,17 +5,17 @@ let swaggerUi = require("swagger-ui-express");
 const cors = require('cors');
 
 //importar rutas
-let usuarioRoutes = require("./routes/usuarioRoutes");
-let loginRoutes = require("./routes/login");
-let proveedoresRoutes = require("./routes/proveedorRoutes");
-let productosRoutes = require("./routes/productoRoutes");
-let clienteRoutes = require("./routes/clienteRoutes");
-let PedidoRoutes = require("./routes/pedidoRoutes");
-let busquedaRoutes = require("./routes/busqueda");
-let uploadRoutes = require("./routes/upload");
-let imagenesRoutes = require("./routes/imagenes");
+let usuarioRoutes = require("./routes/usuario.route");
+let loginRoutes = require("./routes/login.route");
+let proveedoresRoutes = require("./routes/proveedor.route");
+let productosRoutes = require("./routes/producto.route");
+let clienteRoutes = require("./routes/cliente.route");
+let PedidoRoutes = require("./routes/pedido.route");
+let busquedaRoutes = require("./routes/busqueda.route");
+let uploadRoutes = require("./routes/upload.route");
+let imagenesRoutes = require("./routes/imagenes.route");
 let sendEmail = require("./routes/sendEmail");
-let { swaggerDocs } = require("./config/swaggerConfig");
+let { swaggerDocs } = require("./config/swagger.config");
 
 //inicializando
 let app = express();
@@ -47,7 +47,7 @@ app.use("/busqueda", busquedaRoutes);
 app.use("/img", imagenesRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/send-email", sendEmail);
-app.use("/v2/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // escuchando peticiones
 app.listen(3000, () => {

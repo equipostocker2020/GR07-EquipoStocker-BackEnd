@@ -1,10 +1,10 @@
 let express = require("express");
 const fileUpload = require("express-fileupload");
 let app = express();
-let Usuario = require("../models/usuarioModel");
-let Producto = require("../models/productoModel");
-let Cliente = require("../models/clienteModel");
-let Proveedor = require("../models/proveedorModel");
+let Usuario = require("../models/usuario.model");
+let Producto = require("../models/producto.model");
+let Cliente = require("../models/cliente.model");
+let Proveedor = require("../models/proveedor.model");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");

@@ -1,12 +1,10 @@
-let express = require("express");
-let app = express();
-let Usuario = require("../models/usuarioModel");
-let Producto = require("../models/productoModel");
-let Proveedor = require("../models/proveedorModel");
-let Cliente = require("../models/clienteModel");
-let Pedido = require("../models/pedidoModel");
+let Usuario = require("../models/usuario.model");
+let Producto = require("../models/producto.model");
+let Proveedor = require("../models/proveedor.model");
+let Cliente = require("../models/cliente.model");
+let Pedido = require("../models/pedido.model");
 
-app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
+const findByColection = (req, res, next) => {
     let busqueda = req.params.busqueda;
     let tabla = req.params.tabla;
     let regex = new RegExp(busqueda, "i");
@@ -43,9 +41,9 @@ app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
             [tabla]: data,
         });
     });
-});
+};
 
-app.get("/todo/:busqueda", (req, res, next) => {
+const findTodo = (req, res, next) => {
     let busqueda = req.params.busqueda;
     let regex = new RegExp(busqueda, "i");
 
@@ -68,7 +66,7 @@ app.get("/todo/:busqueda", (req, res, next) => {
             pedido: respuestas[4],
         });
     });
-});
+};
 
 function buscarUsuarios(busqueda, regex) {
     return new Promise((resolve, reject) => {
@@ -147,4 +145,4 @@ function buscarPedido(busqueda, regex) {
     });
 }
 
-module.exports = app;
+module.exports = { findByColection, findTodo };

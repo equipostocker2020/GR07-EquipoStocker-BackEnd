@@ -3,7 +3,7 @@ let app = express();
 
 let mdAutenticacion = require("../middlewares/autenticacion");
 
-const { getClientes, addCliente, updateClienteById, deleteCliente } = require('../controller/cliente.controller');
+const { getClientes, addCliente, updateClienteById, deleteCliente } = require('../controllers/cliente.controller');
 
 app.get("/", getClientes);
 

@@ -1,10 +1,10 @@
 let express = require("express");
 let app = express();
-let Pedido = require("../models/pedidoModel");
+let Pedido = require("../models/pedido.model");
 let mdAutenticacion = require("../middlewares/autenticacion");
 let Cliente = require("../models/cliente");
-let Producto = require("../models/productoModel");
-let Usuario = require("../models/usuarioModel");
+let Producto = require("../models/producto.model");
+let Usuario = require("../models/usuario.model");
 const uuidv4 = require("uuidv4");
 
 app.get("/", (req, res) => {

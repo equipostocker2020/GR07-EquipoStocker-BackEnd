@@ -1,5 +1,5 @@
 //requiere modelo
-let Usuario = require("../models/usuarioModel");
+let Usuario = require("../models/usuario.model");
 
 // falta encriptar contraseña.
 let bcrypt = require("bcryptjs");

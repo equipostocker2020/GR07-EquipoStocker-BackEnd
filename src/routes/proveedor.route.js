@@ -1,6 +1,6 @@
 let express = require("express");
 let app = express();
-let Proveedor = require("../models/proveedorModel");
+let Proveedor = require("../models/proveedor.model");
 let mdAutenticacion = require("../middlewares/autenticacion");
 
 app.get("/", (req, res) => {
