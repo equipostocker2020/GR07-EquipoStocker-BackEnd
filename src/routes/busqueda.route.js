@@ -7,5 +7,4 @@ app.get("/coleccion/:tabla/:busqueda", findByColection);
 
 app.get("/todo/:busqueda", findTodo);
 
-
 module.exports = app;
