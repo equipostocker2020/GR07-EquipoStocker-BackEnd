@@ -1,16 +1,13 @@
-//requires
-var express = require("express");
+let express = require("express");
 const fileUpload = require("express-fileupload");
-var app = express();
-var Usuario = require("../models/usuario");
-var Producto = require("../models/producto");
-var Cliente = require("../models/cliente");
-var Proveedor = require("../models/proveedor");
+let app = express();
+let Usuario = require("../models/usuarioModel");
+let Producto = require("../models/productoModel");
+let Cliente = require("../models/clienteModel");
+let Proveedor = require("../models/proveedorModel");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-var jwt = require("jsonwebtoken");
-var mdAutenticacion = require("../middlewares/autenticacion");
 
 //contexto de fileUpload
 app.use(fileUpload());
@@ -18,9 +15,9 @@ app.use(fileUpload());
 app.put("/:tipo/:id", (req, res) => {
     //para actualizar una foto se envia un put . Se envia como params el tipo de coleccion
     // y el id valido.
-    var tipo = req.params.tipo;
-    var id = req.params.id;
-    var tiposValidos = ["productos", "usuarios", "clientes", "proveedores"];
+    let tipo = req.params.tipo;
+    let id = req.params.id;
+    let tiposValidos = ["productos", "usuarios", "clientes", "proveedores"];
 
     if (!tiposValidos.includes(tipo)) {
         return res.status(400).json({
@@ -40,8 +37,8 @@ app.put("/:tipo/:id", (req, res) => {
     // se desarma el nombre y la extension para validar que el file enviado sea aceptado
     const file = req.files.imagen;
     const nombreCortado = file.name.split(".");
-    var extensionArchivo = nombreCortado[nombreCortado.length - 1];
-    var extensionesValidas = ["png", "jpg", "gif", "jpeg"];
+    let extensionArchivo = nombreCortado[nombreCortado.length - 1];
+    let extensionesValidas = ["png", "jpg", "gif", "jpeg"];
 
     if (!extensionesValidas.includes(extensionArchivo)) {
         return res.status(400).json({

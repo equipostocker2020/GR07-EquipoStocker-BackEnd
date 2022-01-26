@@ -1,14 +1,14 @@
-var express = require("express");
-var app = express();
-var Pedido = require("../models/pedido");
-var mdAutenticacion = require("../middlewares/autenticacion");
-const Cliente = require("../models/cliente");
-var Producto = require("../models/producto");
-var Usuario = require("../models/usuario");
+let express = require("express");
+let app = express();
+let Pedido = require("../models/pedidoModel");
+let mdAutenticacion = require("../middlewares/autenticacion");
+let Cliente = require("../models/cliente");
+let Producto = require("../models/productoModel");
+let Usuario = require("../models/usuarioModel");
 const uuidv4 = require("uuidv4");
 
 app.get("/", (req, res) => {
-    var desde = req.params.desde || 0;
+    let desde = req.params.desde || 0;
     desde = Number(desde);
 
     Pedido.find({}, " numero_pedido cantidad estado total")
@@ -38,10 +38,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:id", (req, res) => {
-    var desde = req.params.desde || 0;
+    let desde = req.params.desde || 0;
     desde = Number(desde);
     let i = 0;
-    var id = req.params.id;
+    let id = req.params.id;
     let pedido = [];
     conteo = 0;
     Pedido.findById(id, (err, pedido) => {
@@ -68,10 +68,10 @@ app.get("/:id", (req, res) => {
 });
 
 app.get("/cliente/:id", (req, res) => {
-    var desde = req.params.desde || 0;
+    let desde = req.params.desde || 0;
     desde = Number(desde);
     let i = 0;
-    var id = req.params.id;
+    let id = req.params.id;
     let pedido = [];
     conteo = 0;
 
@@ -104,10 +104,10 @@ app.get("/cliente/:id", (req, res) => {
 });
 
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
-    var body = req.body;
-    var resta_producto = 0;
+    let body = req.body;
+    let resta_producto = 0;
 
-    var producto = Producto.findById(body.producto, (err, producto) => {
+    let producto = Producto.findById(body.producto, (err, producto) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -132,9 +132,9 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         }
 
         let idUnico = uuidv4();
-        var numero_pedido = "P-" + idUnico;
+        let numero_pedido = "P-" + idUnico;
 
-        var pedido = new Pedido({
+        let pedido = new Pedido({
             numero_pedido: numero_pedido,
             cliente: body.cliente,
             producto: body.producto,
@@ -172,9 +172,9 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
 });
 
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
-    var body = req.body;
-    var cantidadAux = 0;
+    let id = req.params.id;
+    let body = req.body;
+    let cantidadAux = 0;
     Pedido.findById(id, (err, pedido) => {
         if (err) {
             return res.status(400).json({
@@ -353,7 +353,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
 });
 
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
+    let id = req.params.id;
 
     Pedido.findById(id, (err, pedido) => {
         if (err) {

@@ -1,18 +1,17 @@
-// requires
-var express = require("express");
-var app = express();
-var Usuario = require("../models/usuario");
-var Producto = require("../models/producto");
-var Proveedor = require("../models/proveedor");
-var Cliente = require("../models/cliente");
-var Pedido = require("../models/pedido");
+let express = require("express");
+let app = express();
+let Usuario = require("../models/usuarioModel");
+let Producto = require("../models/productoModel");
+let Proveedor = require("../models/proveedorModel");
+let Cliente = require("../models/clienteModel");
+let Pedido = require("../models/pedidoModel");
 
 app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
-    var busqueda = req.params.busqueda;
-    var tabla = req.params.tabla;
-    var regex = new RegExp(busqueda, "i");
+    let busqueda = req.params.busqueda;
+    let tabla = req.params.tabla;
+    let regex = new RegExp(busqueda, "i");
 
-    var promesa;
+    let promesa;
 
     switch (tabla) {
         case "usuarios":
@@ -47,8 +46,8 @@ app.get("/coleccion/:tabla/:busqueda", (req, res, next) => {
 });
 
 app.get("/todo/:busqueda", (req, res, next) => {
-    var busqueda = req.params.busqueda;
-    var regex = new RegExp(busqueda, "i");
+    let busqueda = req.params.busqueda;
+    let regex = new RegExp(busqueda, "i");
 
     // guardo todas las promesas en un arreglo y
     // las hago asincronas para mapear todos los resultados
@@ -71,7 +70,6 @@ app.get("/todo/:busqueda", (req, res, next) => {
     });
 });
 
-// declaro funciones
 function buscarUsuarios(busqueda, regex) {
     return new Promise((resolve, reject) => {
         Usuario.find({}, "nombre email direccion empresa dni cuit role img")

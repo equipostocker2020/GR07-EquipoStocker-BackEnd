@@ -1,14 +1,14 @@
-var mongoose = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
+let mongoose = require("mongoose");
+let uniqueValidator = require("mongoose-unique-validator");
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var estadoPedido = {
+let estadoPedido = {
     values: ["enviado", "preparación", "cancelado"],
     message: "{VALUE} no es un estado permitido ",
 };
 
-var pedidoSchema = new Schema({
+let pedidoSchema = new Schema({
     cliente: {
         type: Schema.Types.ObjectId,
         ref: "Cliente",

@@ -1,24 +1,14 @@
-//requires
-var express = require("express");
-var app = express();
-// //json web token
-var jwt = require("jsonwebtoken");
-//requiere modelo
-var Proveedor = require("../models/proveedor");
-//middleware
-var mdAutenticacion = require("../middlewares/autenticacion");
-// falta encriptar contraseña.
-var bcrypt = require("bcryptjs");
+let express = require("express");
+let app = express();
+let Proveedor = require("../models/proveedorModel");
+let mdAutenticacion = require("../middlewares/autenticacion");
 
 app.get("/", (req, res) => {
-    // enumerando
-    var desde = req.query.desde || 0;
-    // busca y mapea los atributos marcados
+    let desde = req.query.desde || 0;
     Proveedor.find({}, "nombre direccion cuit email telefono situacion_afip img estado")
         .skip(desde)
         .limit(15)
         .populate("usuario", "email")
-        // ejecuta, puede tener un error manejado.
         .exec((err, proveedor, usuario) => {
             if (err) {
                 return res.status(500).json({
@@ -27,7 +17,6 @@ app.get("/", (req, res) => {
                     errors: err,
                 });
             }
-            // metodo count donde va contando proveedor simplemente muestra un int que se incrementa con cada nuevo registro
             Proveedor.count({}, (err, conteo) => {
                 res.status(200).json({
                     ok: true,
@@ -40,10 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", mdAutenticacion.verificaToken, (req, res) => {
-    // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
-    // esto se setea en postam. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
-    var body = req.body;
-    var proveedor = new Proveedor({
+    let body = req.body;
+    let proveedor = new Proveedor({
         nombre: body.nombre,
         direccion: body.direccion,
         cuit: body.cuit,
@@ -56,9 +43,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
         estado: body.estado,
         usuario: body.usuario,
     });
-    // si se mando el request correcto se guarda. Este metodo puede traer un error manejado.
     proveedor.save((err, proveedorGuardado) => {
-        // si hay un error....
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -66,7 +51,6 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
                 errors: err,
             });
         }
-        // si pasa ok ...
         res.status(201).json({
             ok: true,
             proveedor: proveedorGuardado,
@@ -76,8 +60,8 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
 });
 
 app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
-    var body = req.body;
+    let id = req.params.id;
+    let body = req.body;
 
     Proveedor.findById(id, (err, proveedor) => {
         if (err) {
@@ -124,7 +108,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (req, res) => {
 });
 
 app.delete("/:id", mdAutenticacion.verificaToken, (req, res) => {
-    var id = req.params.id;
+    let id = req.params.id;
     Proveedor.findByIdAndRemove(id, (err, proveedorBorrado) => {
         if (err) {
             return res.status(500).json({

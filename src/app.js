@@ -1,24 +1,24 @@
 // requires
-var express = require("express");
-var bodyParser = require("body-parser");
-var swaggerUi = require("swagger-ui-express");
+let express = require("express");
+let bodyParser = require("body-parser");
+let swaggerUi = require("swagger-ui-express");
 const cors = require('cors');
 
 //importar rutas
-var usuarioRoutes = require("./routes/usuario");
-var loginRoutes = require("./routes/login");
-var proveedoresRoutes = require("./routes/proveedor");
-var productosRoutes = require("./routes/producto");
-var clienteRoutes = require("./routes/cliente");
-var PedidoRoutes = require("./routes/pedido");
-var busquedaRoutes = require("./routes/busqueda");
-var uploadRoutes = require("./routes/upload");
-var imagenesRoutes = require("./routes/imagenes");
-var sendEmail = require("./routes/sendEmail");
-var { swaggerDocs } = require("./config/swaggerConfig");
+let usuarioRoutes = require("./routes/usuarioRoutes");
+let loginRoutes = require("./routes/login");
+let proveedoresRoutes = require("./routes/proveedorRoutes");
+let productosRoutes = require("./routes/productoRoutes");
+let clienteRoutes = require("./routes/clienteRoutes");
+let PedidoRoutes = require("./routes/pedidoRoutes");
+let busquedaRoutes = require("./routes/busqueda");
+let uploadRoutes = require("./routes/upload");
+let imagenesRoutes = require("./routes/imagenes");
+let sendEmail = require("./routes/sendEmail");
+let { swaggerDocs } = require("./config/swaggerConfig");
 
 //inicializando
-var app = express();
+let app = express();
 require("./config/database");
 
 // enconding, verbos y metodos soportados..

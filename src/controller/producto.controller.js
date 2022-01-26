@@ -1,7 +1,4 @@
-let express = require("express");
-let app = express();
-let Producto = require("../models/producto");
-let mdAutenticacion = require("../middlewares/autenticacion");
+let Producto = require("../models/productoModel");
 
 const getProducto = (req, res) => {
     let desde = req.params.desde || 0;

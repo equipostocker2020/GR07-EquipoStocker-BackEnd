@@ -1,4 +1,4 @@
-let Cliente = require("../models/cliente");
+let Cliente = require("../models/clienteModel");
 
 const getClientes = (req, res) =>{
     let desde = req.query.desde || 0;

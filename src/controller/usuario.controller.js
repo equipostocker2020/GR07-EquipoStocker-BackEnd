@@ -1,19 +1,12 @@
-var express = require("express");
-var app = express();
-
-
-//json web token
-var jwt = require("jsonwebtoken");
-
 //requiere modelo
-var Usuario = require("../models/usuario");
+let Usuario = require("../models/usuarioModel");
 
 // falta encriptar contraseña.
-var bcrypt = require("bcryptjs");
+let bcrypt = require("bcryptjs");
 
 const getUsuarios = (req, res) => {
     // enumerando
-    var desde = req.query.desde || 0;
+    let desde = req.query.desde || 0;
     // busca y mapea los atributos marcados
     Usuario.find({},
             "nombre apellido empresa email img role password cuit dni direccion telefono usuario")
@@ -43,13 +36,13 @@ const getUsuarios = (req, res) => {
 const addUsuarios = (req, res) => {
     // seteo el body que viaja en el request. Todos los campos required del modelo deben estar aca si no falla
     // esto se setea en postman. Al hacer la peticion post en el body tipo x-www-form-urlencoded.
-    var body = req.body;
+    let body = req.body;
     Usuario.find({})
         .exec((err, usuarios) => {
 
             if (usuarios.length == 0) {
 
-                var usuario = new Usuario({
+                let usuario = new Usuario({
                     nombre: body.nombre,
                     apellido: body.apellido,
                     empresa: body.empresa,
@@ -64,7 +57,7 @@ const addUsuarios = (req, res) => {
                     usuario: body.email,
                 });
             } else {
-                var usuario = new Usuario({
+                let usuario = new Usuario({
                     nombre: body.nombre,
                     apellido: body.apellido,
                     empresa: body.empresa,
@@ -101,8 +94,8 @@ const addUsuarios = (req, res) => {
 };
 
 const editUsuarios = (req, res) => {
-    var id = req.params.id;
-    var body = req.body;
+    let id = req.params.id;
+    let body = req.body;
 
     Usuario.findById(id, (err, usuario) => {
         if (err) {
@@ -149,7 +142,7 @@ const editUsuarios = (req, res) => {
 };
 
 const deleteUsuarios = (req, res) => {
-    var id = req.params.id;
+    let id = req.params.id;
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
         if (err) {
             return res.status(500).json({

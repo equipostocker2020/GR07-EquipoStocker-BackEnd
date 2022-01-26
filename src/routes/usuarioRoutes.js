@@ -1,9 +1,9 @@
 //requires
-var express = require("express");
-var app = express();
+let express = require("express");
+let app = express();
 
 //middleware
-var mdAutenticacion = require("../middlewares/autenticacion");
+let mdAutenticacion = require("../middlewares/autenticacion");
 
 const { getUsuarios, addUsuarios, editUsuarios, deleteUsuarios } = require('../controller/usuario.controller');
 

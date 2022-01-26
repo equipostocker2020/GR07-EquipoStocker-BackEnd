@@ -1,17 +1,14 @@
-// requires
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
+let mongoose = require('mongoose');
+let uniqueValidator = require('mongoose-unique-validator');
 
-// importando esquema
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var estados = {
+let estados = {
     values: ["ACTIVO", "INACTIVO"],
     message: "{VALUE} no es un estado permitido",
 };
 
-// generando campos al schema 
-var proveedorSchema = new Schema({
+let proveedorSchema = new Schema({
     nombre: { type: String, required: [true, 'El nombre es necesario'] },
     direccion: { type: String, required: false },
     cuit: { type: String, unique: true, required: [true, 'El CUIT es necesario'] },
@@ -31,8 +28,6 @@ var proveedorSchema = new Schema({
     img: { type: String, required: false },
 });
 
-// validando path
 proveedorSchema.plugin(uniqueValidator, { message: 'debe ser único' });
 
-// exportando el modulo para utilizarlo
 module.exports = mongoose.model('Proveedor', proveedorSchema);
