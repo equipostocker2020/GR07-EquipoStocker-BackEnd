@@ -13,7 +13,7 @@ let clienteRoutes = require("./routes/cliente.route");
 let PedidoRoutes = require("./routes/pedido.route");
 let busquedaRoutes = require("./routes/busqueda.route");
 let uploadRoutes = require("./routes/upload.route");
-let imagenesRoutes = require("./routes/imagenes.route");
+let imagenesRoutes = require("./routes/imagen.route");
 let sendEmail = require("./routes/sendEmail");
 let { swaggerDocs } = require("./config/swagger.config");
 
